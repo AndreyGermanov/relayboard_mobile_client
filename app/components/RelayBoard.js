@@ -5,15 +5,22 @@ import styles from '../utils/StyleSheet';
 import Header from './Header';
 import RelayList from './RelaysList';
 import Footer from './Footer';
+import DialogBox from './UI/DialogBox';
 import {deleteRelay,updateMode} from '../actions/Actions';
 
 const RelayBoard = class extends Component {
     render() {
         if (this.props.store.getState().mode == 'confirm_delete') {
-            Alert.alert('Confirm','Are you sure?',[
-                {text:'Yes',onPress: () => deleteRelay(this.props.store.getState().current_relay,2)},
-                {text:'No',onPress: () => updateMode('relay_list')}
-            ])
+            var self = this;
+            Alert.alert(
+                'Remove relay',
+                'Are you sure',
+                [
+                    {text: 'Yes', onPress: () => {self.props.store.dispatch(deleteRelay(self.props.store.getState().current_relay,2))}},
+                    {text: 'No', onPress: () => self.props.store.dispatch(updateMode('relay_list'))},
+                ],
+                { cancelable: false }
+            )
         }
         return (
             <View style={styles.layout}>
@@ -35,7 +42,9 @@ const RelayBoard = class extends Component {
     }
 
     componentWillUnmount() {
-        this.props.store.unsubscribe(this.unsubscribe);
+        if (typeof(this.unsubscribe) != 'undefined') {
+            this.unsubscribe();
+        };
     }
 
     handleChange() {
