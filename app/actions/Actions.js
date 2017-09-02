@@ -22,10 +22,11 @@ export const showDeleteRelayAlertDialog = (number) => {
     }
 }
 
-export const updateMode = (mode) => {
+export const updateMode = (mode,options) => {
     return {
         type: 'UPDATE_MODE',
-        mode: mode
+        mode: mode,
+        options: options
     }
 }
 
@@ -33,6 +34,19 @@ export const removeRelay = (number) => {
     return {
         type: 'DELETE_RELAY',
         number: number
+    }
+}
+
+export const clearSettingsErrors = () => {
+    return {
+        type: 'CLEAR_SETTINGS_ERRORS'
+    }
+}
+
+export const setSettingsErrors = (errors) => {
+    return {
+        type: 'SET_SETTINGS_ERRORS',
+        errors: errors
     }
 }
 
@@ -58,6 +72,27 @@ export const switchRelay = (number) => {
             dispatch(loadState());
         },function(err) {
         });
+    }
+}
+
+export const changeHostField = (value) => {
+    return {
+        type: 'CHANGE_HOST_FIELD',
+        value: value
+    }
+}
+
+export const changePortField = (value) => {
+    return {
+        type: 'CHANGE_PORT_FIELD',
+        value: value
+    }
+}
+
+export const editRelay = (number) => {
+    return {
+        type: 'EDIT_RELAY',
+        number: number
     }
 }
 

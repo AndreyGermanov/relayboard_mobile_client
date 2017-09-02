@@ -1,6 +1,12 @@
 import {AsyncStorage} from 'react-native';
+import async from 'async';
+import _ from 'lodash';
+
+export var savedState = {};
+
 export const getInitialState = (callback) => {
     var state = {
+        mode: 'relay_list',
         settings: {
             host: 'http://192.168.0.107',
             port: 8082
@@ -20,54 +26,92 @@ export const getInitialState = (callback) => {
             12: 'Empty now',
         },
         status: [0,0,1,0,0,0,0,0,0,0,0,0],
-        loaded: true
+        loaded: true,
+        errors: {
+            settings: {},
+            relays: {}
+        }
     }
 
     // Get general settings from Application storage
-    AsyncStorage.getItem('settings').then(function(result) {
-        var settings = result;
-        if (settings) {
-            try {
-                settings = JSON.parse(settings);
-                state.settings = settings;
-            } catch (e) {
-            }
-        }
-        AsyncStorage.getItem('relays').then(function(result) {
-            var relays = result;
-            if (relays) {
-                try {
-                    state.relays = JSON.parse(relays);
-                } catch(e) {
-
-                }
-            }
-            // Request Relayboard to get current status of relays
-            fetch('http://192.168.0.107:'+state.settings.port+'/request/STATUS').then(function(response) {
-                if (response.ok) {
-                    return response.json();
+    async.series([
+        function(callback) {
+            AsyncStorage.getItem('settings').then(function(result) {
+                var settings = result;
+                if (settings) {
+                    try {
+                        settings = JSON.parse(settings);
+                        state.settings = settings;
+                        callback();
+                    } catch (e) {
+                        callback();
+                    }
                 } else {
-                    throw new Error('Network error');
-                }
-            }).then(function(responseJSON) {
-                if (responseJSON && responseJSON['STATUS']) {
-                    state.status = responseJSON['STATUS'].split(',');
-                }
-                if (callback) {
-                    callback(state);
-                }
-            }).catch(function(e) {
-                if (callback) {
-                    callback(state);
+                    callback();
                 }
             })
-        })
+        },
+        function(callback) {
+            AsyncStorage.getItem('relays').then(function(result) {
+                var relays = result;
+                if (relays) {
+                    try {
+                        state.relays = JSON.parse(relays);
+                        callback();
+                    } catch (e) {
+                        callback();
+                    }
+                } else {
+                    callback();
+                }
+            });
+        },
+        function(callback) {
+            fetch(state.settings.host+':'+state.settings.port+'/request/STATUS').then(function(response) {
+                if (response.ok) {
+                    var response = response.json();
+                    if (typeof(response['STATUS'] != 'undefined') && response['STATUS']) {
+                        state.status = response.json();
+                    }
+                };
+                callback();
+            }).catch(function() {
+                callback();
+            })
+        }
+    ],function() {
+        savedState = _.cloneDeep(state);
+        if (callback) {
+            callback(state);
+        }
     });
-
-
 }
 
-export const saveSettings = (state) => {
-    AsyncStorage.setItem('settings',JSON.stringify(state.settings));
-    AsyncStorage.setItem('relays',JSON.stringify(state.relays));
+export const saveSettings = (state,callback) => {
+    async.series([
+        function(callback) {
+            if (state.settings) {
+                AsyncStorage.setItem('settings', JSON.stringify(state.settings))
+                    .then(function() {
+                        callback();
+                    });
+            } else {
+                callback();
+            }
+        },
+        function(callback) {
+            if (state.relays) {
+                AsyncStorage.setItem('relays', JSON.stringify(state.relays))
+                    .then(function() {
+                        callback();
+                    })
+            } else {
+                callback();
+            }
+        }
+    ],function() {
+        if (callback) {
+            callback();
+        }
+    });
 }

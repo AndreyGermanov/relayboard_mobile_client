@@ -8,7 +8,7 @@ var Header = class extends Component {
         return (
             <View style={{height:48}}>
                 <View style={styles.header}>
-                    <Icon name='bars' style={styles.headerText}/>
+                    <TouchableHighlight onPress={this.props.onSettingsClick}><Icon name='bars' style={styles.headerText} /></TouchableHighlight>
                     <Text style={styles.headerText}>Relay Board</Text>
                     <Icon name="wrench" style={[styles.headerText,{color:'darkgreen'}]}/>
                 </View>

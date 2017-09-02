@@ -1,36 +1,56 @@
 import React,{Component} from 'react';
-import {View,Text,Alert} from 'react-native';
+import {View,Text,Alert,ScrollView} from 'react-native';
 import {loadState} from '../actions/Actions';
 import styles from '../utils/StyleSheet';
 import Header from './Header';
 import RelayList from './RelaysList';
 import Footer from './Footer';
-import DialogBox from './UI/DialogBox';
+import AppSettings from './AppSettings';
+
+
 import {deleteRelay,updateMode} from '../actions/Actions';
 
 const RelayBoard = class extends Component {
     render() {
-        if (this.props.store.getState().mode == 'confirm_delete') {
+        var state = this.props.store.getState(); 
+        if (state.mode == 'confirm_delete') {
             var self = this;
             Alert.alert(
                 'Remove relay',
                 'Are you sure',
                 [
-                    {text: 'Yes', onPress: () => {self.props.store.dispatch(deleteRelay(self.props.store.getState().current_relay,2))}},
+                    {text: 'Yes', onPress: () => {self.props.store.dispatch(deleteRelay(state.current_relay,2))}},
                     {text: 'No', onPress: () => self.props.store.dispatch(updateMode('relay_list'))},
                 ],
                 { cancelable: false }
             )
         }
-        return (
-            <View style={styles.layout}>
-                <Header/>
-                <View style={styles.body}>
-                    <RelayList onSwitchRelay={this.props.onSwitchRelay} onDeleteRelay={this.props.onDeleteRelay} onEditRelay={this.props.onEditRelay} relays={this.props.relays} status={this.props.status}/>
+        if (state.mode == 'relay_list') {
+            return (
+                <View style={styles.layout}>
+                    <Header onSettingsClick={this.props.onSettingsClick.bind(this)}/>
+                    <View style={styles.body}>
+                        <RelayList onSwitchRelay={this.props.onSwitchRelay} onDeleteRelay={this.props.onDeleteRelay}
+                                   onEditRelay={this.props.onEditRelay} relays={this.props.relays}
+                                   status={this.props.status}/>
+                    </View>
+                    <Footer/>
                 </View>
-                <Footer/>
-            </View>
-        )
+            )
+        } else if (state.mode == 'app_settings') {
+            return (<AppSettings
+                            host={this.props.host}
+                            port={this.props.port}
+                            errors={this.props.errors}
+                            saveSettingsClick={this.props.saveSettingsClick}
+                            cancelSettingsClick={this.props.cancelSettingsClick}
+                            onSettingsClick={this.props.onSettingsClick}
+                            onChangePortField={this.props.onChangePortField}
+                            onChangeHostField={this.props.onChangeHostField}
+                        />
+            )
+        }
+
     }
 
     componentDidMount() {
