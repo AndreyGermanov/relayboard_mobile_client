@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import RelayBoard from '../components/RelayBoard';
 import {switchRelay,deleteRelay,loadState,updateMode,setSettingsErrors,editRelay,changeHostField,changePortField} from '../actions/Actions';
-import {saveSettings} from '../utils/Utils';
+import {saveSettings,getObjectKeysById} from '../utils/Utils';
 import _ from 'lodash';
 
 const mapStateToProps = (state,ownProps) => {
@@ -14,7 +14,7 @@ const mapStateToProps = (state,ownProps) => {
         port: state.settings.port,
         errors: state.errors,
         relay_number: state.current_relay ? state.current_relay : '',
-        relay_name: state.current_relay ? state.relays[current_relay] : ''
+        relay_name: state.current_relay ? state.relays[state.current_relay] : ''
     }
 };
 
@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch,ownProps) => {
                 })
             }
         },
-        cancelSettingsClick: (hostInput,portInput) => {
+        cancelSettingsClick: () => {
             dispatch(updateMode('relay_list'));
         },
         onSettingsClick: () => {

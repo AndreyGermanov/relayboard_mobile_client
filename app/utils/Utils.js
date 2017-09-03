@@ -8,23 +8,23 @@ export const getInitialState = (callback) => {
     var state = {
         mode: 'relay_list',
         settings: {
-            host: 'http://192.168.0.107',
+            host: 'http://localhost',
             port: 8082
         },
-        relays: {
-            1: 'Water Pump',
-            2: 'Empty now',
-            3: 'Lamp',
-            4: 'Fan',
-            5: 'Empty now',
-            6: 'Empty now',
-            7: 'Empty now',
-            8: 'Empty now',
-            9: 'Empty now',
-            10: 'Empty now',
-            11: 'Empty now',
-            12: 'Empty now',
-        },
+        relays: [
+            {id:1,name:'Water pump'},
+            {id:2,name:'Empty now'},
+            {id:3,name:'Lamp'},
+            {id:4,name:'Fan'},
+            {id:5,name:'Empty now'},
+            {id:6,name:'Empty now'},
+            {id:7,name:'Empty now'},
+            {id:8,name:'Empty now'},
+            {id:9,name:'Empty now'},
+            {id:10,name:'Empty now'},
+            {id:11,name:'Empty now'},
+            {id:12,name:'Empty now'}
+        ],
         status: [0,0,1,0,0,0,0,0,0,0,0,0],
         loaded: true,
         errors: {
@@ -32,7 +32,6 @@ export const getInitialState = (callback) => {
             relays: {}
         }
     }
-
     // Get general settings from Application storage
     async.series([
         function(callback) {
@@ -114,4 +113,14 @@ export const saveSettings = (state,callback) => {
             callback();
         }
     });
+}
+
+export const getObjectKeysById = (id,collection) => {
+    var result = [];
+    return _.forEach(collection,function(item,key) {
+        if (item.id === id) {
+            result.push(key);
+        }
+    })
+    return result;
 }

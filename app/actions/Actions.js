@@ -68,7 +68,7 @@ export const switchRelay = (number) => {
         if (state.status[number-1]==1) {
             mode = 'OFF';
         }
-        fetch('http://192.168.0.107:'+state.settings.port+'/request/'+mode+'/'+number).then(function(response) {
+        fetch(state.settings.host+':'+state.settings.port+'/request/'+mode+'/'+number).then(function(response) {
             dispatch(loadState());
         },function(err) {
         });

@@ -5,38 +5,38 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const RelayList = class extends Component {
     render() {
-        var buttons = [],
-            buttonStyle = styles.button,
+        var buttonStyle = styles.button,
             buttonTextStyle = styles.buttonText;
-        for (var i in this.props.relays) {
-            if (typeof(this.props.status[i-1]) != 'undefined') {
-                if (this.props.status[i-1]==1) {
-                    buttonStyle = [styles.button,styles.buttonActive];
+        var buttons = this.props.relays.map(function(relay,index) {
+            if (typeof(this.props.status[relay.id-1]) != 'undefined') {
+                if (this.props.status[relay.id - 1] == 1) {
+                    buttonStyle = [styles.button, styles.buttonActive];
                     buttonTextStyle = styles.buttonActiveText;
-                } else if (this.props.status[i-1]==0) {
+                } else if (this.props.status[relay.id - 1] == 0) {
                     buttonStyle = styles.button;
                     buttonTextStyle = styles.buttonText;
                 }
-                buttons.push(
-                    <View style={styles.buttonContainer} key={'relay_view_'+i}>
-                        <View style={buttonStyle} key={'relay_button_'+i}>
-                            <TouchableHighlight onPress={this.props.onSwitchRelay.bind(this,i)}>
+                return (
+                    <View style={styles.buttonContainer} key={'relay_view_'+relay.id}>
+                        <View style={buttonStyle} key={'relay_button_'+relay.id}>
+                            <TouchableHighlight onPress={this.props.onSwitchRelay.bind(this,relay.id)}>
                                 <Icon name="power-off" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
                             </TouchableHighlight>
                             <View style={{flex:1,flexDirection:'row',justifyContent:'center'}}>
-                                <Text style={[buttonTextStyle,{flex:1}]} key={'relay_text_'+i}>{this.props.relays[i]}</Text>
+                                <Text style={[buttonTextStyle,{flex:1}]}
+                                      key={'relay_text_'+relay.id}>{relay.name}</Text>
                             </View>
-                            <TouchableHighlight onPress={this.props.onEditRelay.bind(this,i)}>
+                            <TouchableHighlight onPress={this.props.onEditRelay.bind(this,relay.id)}>
                                 <Icon name="cog" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
                             </TouchableHighlight>
-                            <TouchableHighlight onPress={this.props.onDeleteRelay.bind(this,i,1)}>
+                            <TouchableHighlight onPress={this.props.onDeleteRelay.bind(this,relay.id,1)}>
                                 <Icon name="ban" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
                             </TouchableHighlight>
                         </View>
                     </View>
                 )
             }
-        }
+        },this)
         return (
             <ScrollView>
                 <View style={styles.relayList}>

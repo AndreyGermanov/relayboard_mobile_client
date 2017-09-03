@@ -1,53 +1,28 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
+ * RelayBoard Mobile Manager application
+ * https://github.com/AndreyGermanov/relayboard_mobile_client
  * @flow
  */
 
 import React, { Component } from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import {AppRegistry} from 'react-native';
 
-export default class RelayBoard extends Component {
+import {createStore,applyMiddleware} from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import {Provider} from 'react-redux';
+import App from './app/containers/App';
+import Reducer from './app/reducers/Reducers';
+
+const store = createStore(Reducer,applyMiddleware(thunkMiddleware));
+
+var RelayBoard = class extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
+        <Provider store={store}>
+          <App store={store} />
+        </Provider>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent('RelayBoard', () => RelayBoard);

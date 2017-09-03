@@ -1,11 +1,11 @@
-import {savedState} from '../utils/Utils';
+import {savedState,findObjectKeysById} from '../utils/Utils';
 import _ from 'lodash';
 
 var Reducer = (state,action) => {
     if (typeof(state) == 'undefined') {
         state = {
             settings: {},
-            relays: {},
+            relays: [],
             status: [],
             loaded: false,
             mode: 'relay_list',
@@ -24,17 +24,21 @@ var Reducer = (state,action) => {
             break;
         case 'UPDATE_MODE':
             if (newState.mode == 'relay_list') {
-                console.log("RESTORE STATE");
                 newState.current_relay = 0;
             } else if (newState.mode == 'app_settings' && action.mode == 'relay_list') {
                 newState.settings.host = savedState.settings.host;
                 newState.settings.port = savedState.settings.port;
+                newState.errors = {};
             }
             newState.mode = action.mode;
             break;
         case 'DELETE_RELAY':
             var relays = _.cloneDeep(newState.relays);
-            delete relays[action.number];
+            var keys = findObjectKeysById(relays,action.number);
+            while (keys.length) {
+                delete relays[keys[0]];
+                keys = findObjectKeysById(relays,action.number);
+            }
             newState.relays = _.cloneDeep(relays);
             newState.mode = 'relay_list';
             break;
@@ -44,7 +48,7 @@ var Reducer = (state,action) => {
         case 'SET_SETTINGS_ERRORS':
             newState.errors.settings = {};
             for (var i in action.errors) {
-                newState.errors.settings[i] = action.errors[i]
+                newState.errors.settings[i] = action.errors[i];
             }
             break;
         case 'CHANGE_PORT_FIELD':
