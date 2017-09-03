@@ -2,6 +2,7 @@ import {savedState,getObjectKeysById} from '../utils/Utils';
 import _ from 'lodash';
 
 var Reducer = (state,action) => {
+    // Define default empty application state
     if (typeof(state) == 'undefined') {
         state = {
             settings: {},
@@ -15,12 +16,9 @@ var Reducer = (state,action) => {
     var newState = _.cloneDeep(state);
     
     switch(action.type) {
+        // Application level actions
         case 'UPDATE_STATE':
             newState = _.cloneDeep(action.state);
-            break;
-        case 'DISPLAY_DELETE_CONFIRMATION_DIALOG':
-            newState.mode = 'confirm_delete';
-            newState.current_relay = action.number;
             break;
         case 'UPDATE_MODE':
             if (newState.mode == 'relay_list') {
@@ -40,6 +38,30 @@ var Reducer = (state,action) => {
             }
             newState.mode = action.mode;
             break;
+        // Global settings screen actions
+        case 'CHANGE_PORT_FIELD':
+            newState.settings.port = action.value;
+            break;
+        case 'CHANGE_HOST_FIELD':
+            newState.settings.host = action.value;
+            break;
+        case 'CLEAR_SETTINGS_ERRORS':
+            newState.errors = {};
+            break;
+        case 'CLEAR_RELAYS_ERRORS':
+            newState.errors = {};
+            break;
+        case 'SET_SETTINGS_ERRORS':
+            newState.errors = {};
+            for (var i in action.errors) {
+                newState.errors[i] = action.errors[i];
+            }
+            break;
+        // RelayList screen actions
+        case 'EDIT_RELAY':
+            newState.current_relay = action.number;
+            newState.mode = 'relay_settings';
+            break;
         case 'DELETE_RELAY':
             var relays = _.cloneDeep(newState.relays);
             var keys = getObjectKeysById(action.number,relays);
@@ -54,39 +76,22 @@ var Reducer = (state,action) => {
             newState.relays = _.cloneDeep(relays);
             newState.mode = 'relay_list';
             break;
-        case 'CLEAR_SETTINGS_ERRORS':
-            newState.errors = {};
+        case 'DISPLAY_DELETE_CONFIRMATION_DIALOG':
+            newState.mode = 'confirm_delete';
+            newState.current_relay = action.number;
             break;
-        case 'CLEAR_RELAYS_ERRORS':
-            newState.errors = {};
-            break;
-        case 'SET_SETTINGS_ERRORS':
-            newState.errors = {};
-            for (var i in action.errors) {
-                newState.errors[i] = action.errors[i];
-            }
-            break;
-        case 'SET_RELAY_SETTINGS_ERRORS':
-            newState.errors = {};
-            for (var i in action.errors) {
-                newState.errors[i] = action.errors[i];
-            }
-            break;
-        case 'CHANGE_PORT_FIELD':
-            newState.settings.port = action.value;
-            break;
-        case 'CHANGE_HOST_FIELD':
-            newState.settings.host = action.value;
-            break;
+        // RelaySettings screen actions
         case 'CHANGE_RELAY_NUMBER_FIELD':
             newState.relays[action.index].id = action.value;
             break;
         case 'CHANGE_RELAY_NAME_FIELD':
             newState.relays[action.index].name = action.value;
             break;
-        case 'EDIT_RELAY':
-            newState.current_relay = action.number;
-            newState.mode = 'relay_settings';
+        case 'SET_RELAY_SETTINGS_ERRORS':
+            newState.errors = {};
+            for (var i in action.errors) {
+                newState.errors[i] = action.errors[i];
+            }
             break;
         default:
     }

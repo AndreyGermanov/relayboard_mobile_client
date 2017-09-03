@@ -4,7 +4,9 @@ import _ from 'lodash';
 
 export var savedState = {};
 
+// Function loads application data on application load
 export const getInitialState = (callback) => {
+    // default demo data
     var state = {
         mode: 'relay_list',
         settings: {
@@ -34,6 +36,7 @@ export const getInitialState = (callback) => {
     }
     // Get general settings from Application storage
     async.series([
+        // Getting global application settings from local storage
         function(callback) {
             AsyncStorage.getItem('settings').then(function(result) {
                 var settings = result;
@@ -50,6 +53,7 @@ export const getInitialState = (callback) => {
                 }
             })
         },
+        // Getting relay settings from local storage
         function(callback) {
             AsyncStorage.getItem('relays').then(function(result) {
                 var relays = result;
@@ -65,6 +69,7 @@ export const getInitialState = (callback) => {
                 }
             });
         },
+        // Based on Global settings, requesting server to obtain current status of relays
         function(callback) {
             fetch(state.settings.host+':'+state.settings.port+'/request/STATUS').then(function(response) {
                 if (response.ok) {
@@ -79,16 +84,20 @@ export const getInitialState = (callback) => {
             })
         }
     ],function() {
+        // Persist this as etalon state
         savedState = _.cloneDeep(state);
+        // return loaded state to calling function
         if (callback) {
             callback(state);
         }
     });
 }
 
+// Save current state of application to local storage
 export const saveSettings = (state,callback) => {
     async.series([
         function(callback) {
+            // save global application settings
             if (state.settings) {
                 AsyncStorage.setItem('settings', JSON.stringify(state.settings))
                     .then(function() {
@@ -98,6 +107,7 @@ export const saveSettings = (state,callback) => {
                 callback();
             }
         },
+        // save relay settings
         function(callback) {
             if (state.relays) {
                 AsyncStorage.setItem('relays', JSON.stringify(state.relays))
@@ -115,6 +125,7 @@ export const saveSettings = (state,callback) => {
     });
 }
 
+// Utility function which returns array of indexes of "collection" items, with provided "id" attribute
 export const getObjectKeysById = (id,collection) => {
     var result = [];
     for (var key in collection) {

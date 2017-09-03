@@ -5,6 +5,7 @@ import {switchRelay, deleteRelay,loadState,updateMode,setSettingsErrors,setRelay
 import {saveSettings,getObjectKeysById} from '../utils/Utils';
 import _ from 'lodash';
 
+// Function maps state data to properties of root RelayBoard and child components
 const mapStateToProps = (state,ownProps) => {
     var current_relay_index = null;
     if (state.current_relay) {
@@ -23,8 +24,10 @@ const mapStateToProps = (state,ownProps) => {
     }
 };
 
+// Function, which maps all event handlers of RelayBoard and child compoents
 const mapDispatchToProps = (dispatch,ownProps) => {
     return {
+        // RelayList event handlers
         onSwitchRelay: (number) => {
             dispatch(switchRelay(number));
         },
@@ -34,6 +37,11 @@ const mapDispatchToProps = (dispatch,ownProps) => {
         onEditRelay: (number) => {
             dispatch(editRelay(number))
         },
+        // Header event handlers
+        onSettingsClick: () => {
+            dispatch(updateMode('app_settings'));
+        },
+        // AppSettings event handlers
         onSaveSettingsClick: () => {
             var state = ownProps.store.getState();
             var errors = {};
@@ -56,6 +64,16 @@ const mapDispatchToProps = (dispatch,ownProps) => {
                 })
             }
         },
+        onCancelSettingsClick: () => {
+            dispatch(updateMode('relay_list'));
+        },
+        onChangePortField: (value) => {
+            dispatch(changePortField(value))
+        },
+        onChangeHostField: (value) => {
+            dispatch(changeHostField(value))
+        },
+        // RelaySettings event handlers
         onSaveRelaySettingsClick: () => {
             var state = ownProps.store.getState();
             var errors = {};
@@ -79,20 +97,8 @@ const mapDispatchToProps = (dispatch,ownProps) => {
                 })
             }
         },
-        onCancelSettingsClick: () => {
-            dispatch(updateMode('relay_list'));
-        },
         onCancelRelaySettingsClick: () => {
             dispatch(updateMode('relay_list'));
-        },
-        onSettingsClick: () => {
-            dispatch(updateMode('app_settings'));
-        },
-        onChangePortField: (value) => {
-            dispatch(changePortField(value))
-        },
-        onChangeHostField: (value) => {
-            dispatch(changeHostField(value))
         },
         onChangeRelayNumberField: (value) => {
             var state = ownProps.store.getState();

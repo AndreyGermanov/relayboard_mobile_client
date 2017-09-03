@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import {StyleSheet} from 'react-native';
 
+// Core UI Styles
 const styles = StyleSheet.create({
     layout: {
         flex:1,

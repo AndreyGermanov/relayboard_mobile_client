@@ -1,5 +1,7 @@
 import {getInitialState,saveSettings} from '../utils/Utils';
 
+// Application wide action creators
+
 export const updateState = (state) => {
     return {
         type: 'UPDATE_STATE',
@@ -15,13 +17,6 @@ export const loadState = () => {
     }
 }
 
-export const showDeleteRelayAlertDialog = (number) => {
-    return {
-        type: 'DISPLAY_DELETE_CONFIRMATION_DIALOG',
-        number: number
-    }
-}
-
 export const updateMode = (mode,options) => {
     return {
         type: 'UPDATE_MODE',
@@ -30,32 +25,23 @@ export const updateMode = (mode,options) => {
     }
 }
 
-export const removeRelay = (number) => {
+// RelayList action creators
+
+export const editRelay = (number) => {
     return {
-        type: 'DELETE_RELAY',
+        type: 'EDIT_RELAY',
         number: number
     }
 }
 
-export const clearSettingsErrors = () => {
+
+export const showDeleteRelayAlertDialog = (number) => {
     return {
-        type: 'CLEAR_SETTINGS_ERRORS'
+        type: 'DISPLAY_DELETE_CONFIRMATION_DIALOG',
+        number: number
     }
 }
 
-export const setSettingsErrors = (errors) => {
-    return {
-        type: 'SET_SETTINGS_ERRORS',
-        errors: errors
-    }
-}
-
-export const setRelaySettingsErrors = (errors) => {
-    return {
-        type: 'SET_RELAY_SETTINGS_ERRORS',
-        errors: errors
-    }
-}
 export const deleteRelay = (number,mode) => {
     return (dispatch,getState) => {
         if (mode == 1) {
@@ -81,6 +67,23 @@ export const switchRelay = (number) => {
     }
 }
 
+export const removeRelay = (number) => {
+    return {
+        type: 'DELETE_RELAY',
+        number: number
+    }
+}
+
+// AppSettings action creators
+
+export const setSettingsErrors = (errors) => {
+    return {
+        type: 'SET_SETTINGS_ERRORS',
+        errors: errors
+    }
+}
+
+
 export const changeHostField = (value) => {
     return {
         type: 'CHANGE_HOST_FIELD',
@@ -94,6 +97,8 @@ export const changePortField = (value) => {
         value: value
     }
 }
+
+// RelaySettings action creators
 
 export const changeRelayNumberField = (index,value) => {
     return {
@@ -111,9 +116,9 @@ export const changeRelayNameField = (index,value) => {
     }
 }
 
-export const editRelay = (number) => {
+export const setRelaySettingsErrors = (errors) => {
     return {
-        type: 'EDIT_RELAY',
-        number: number
+        type: 'SET_RELAY_SETTINGS_ERRORS',
+        errors: errors
     }
 }

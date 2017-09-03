@@ -15,14 +15,15 @@ import Reducer from './app/reducers/Reducers';
 
 const store = createStore(Reducer,applyMiddleware(thunkMiddleware));
 
+// Creating root object based on wrapper "App" container. Store and Reducer provided to it
 var RelayBoard = class extends Component {
-render() {
-  return (
-      <Provider store={store}>
-        <App store={store} />
-      </Provider>
-  );
-}
+    render() {
+      return (
+          <Provider store={store}>
+            <App store={store} />
+          </Provider>
+      );
+    }
 }
 
 AppRegistry.registerComponent('RelayBoard', () => RelayBoard);
