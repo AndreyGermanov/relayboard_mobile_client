@@ -8,16 +8,16 @@ import Header from './Header';
 var RelaySettings = class extends Component {
     render() {
         var self = this,
-            hostError = null,
-            portError =null;
-        if (this.props.errors.settings.relay_number) {
+            relayNameError = null,
+            relayNumberError =null;
+        if (this.props.errors.id) {
             relayNumberError = <FormValidationMessage>
-                {this.props.errors.settings.relay_number};
+                {this.props.errors.id};
             </FormValidationMessage>
         }
-        if (this.props.errors.settings.relay_name) {
+        if (this.props.errors.name) {
             relayNameError = <FormValidationMessage>
-                {this.props.errors.settings.relay_name};
+                {this.props.errors.name};
             </FormValidationMessage>
         }
         return (
@@ -26,14 +26,14 @@ var RelaySettings = class extends Component {
                 <View style={styles.body}>
                     <FormLabel>Digital PIN number</FormLabel>
                     {relayNumberError}
-                    <FormInput value={this.props.relay_number.toString()} onChangeText={this.props.onChangeRelayNumberField}/>
+                    <FormInput value={this.props.number.toString()} onChangeText={this.props.onChangeRelayNumberField}/>
                     <FormLabel>Relay name</FormLabel>
                     {relayNameError}
-                    <FormInput value={this.props.relay_name.toString()}  onChangeText={this.props.onChangeRelayNameField}/>
+                    <FormInput value={this.props.name.toString()}  onChangeText={this.props.onChangeRelayNameField}/>
                 </View>
                 <SaveSettingsFooter
-                    onSaveClick={this.props.saveRelaySettingsClick.bind(this)}
-                    onCancelClick={this.props.cancelRelaySettingsClick.bind(this)}
+                    onSaveClick={this.props.saveSettingsClick.bind(this)}
+                    onCancelClick={this.props.cancelSettingsClick.bind(this)}
                 />
             </View>
         )

@@ -17,8 +17,8 @@ const RelayList = class extends Component {
                     buttonTextStyle = styles.buttonText;
                 }
                 return (
-                    <View style={styles.buttonContainer} key={'relay_view_'+relay.id}>
-                        <View style={buttonStyle} key={'relay_button_'+relay.id}>
+                    <View style={styles.buttonContainer} key={'relay_view_'+index}>
+                        <View style={buttonStyle} key={'relay_button_'+index}>
                             <TouchableHighlight onPress={this.props.onSwitchRelay.bind(this,relay.id)}>
                                 <Icon name="power-off" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
                             </TouchableHighlight>

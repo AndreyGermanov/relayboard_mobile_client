@@ -6,7 +6,7 @@ import Header from './Header';
 import RelayList from './RelaysList';
 import Footer from './Footer';
 import AppSettings from './AppSettings';
-
+import RelaySettings from './RelaySettings';
 
 import {deleteRelay,updateMode} from '../actions/Actions';
 
@@ -25,7 +25,33 @@ const RelayBoard = class extends Component {
                 { cancelable: false }
             )
         }
-        if (state.mode == 'relay_list') {
+        if (state.mode == 'app_settings') {
+            return (
+                <AppSettings
+                    host={this.props.host}
+                    port={this.props.port}
+                    errors={this.props.errors}
+                    saveSettingsClick={this.props.saveSettingsClick}
+                    cancelSettingsClick={this.props.cancelSettingsClick}
+                    onSettingsClick={this.props.onSettingsClick}
+                    onChangePortField={this.props.onChangePortField}
+                    onChangeHostField={this.props.onChangeHostField}
+                />
+            )
+        } else if (state.mode == 'relay_settings') {
+            return (
+                <RelaySettings
+                    number={this.props.relay_number}
+                    name={this.props.relay_name}
+                    errors={this.props.errors}
+                    saveSettingsClick={this.props.saveRelaySettingsClick}
+                    cancelSettingsClick={this.props.cancelRelaySettingsClick}
+                    onSettingsClick={this.props.onSettingsClick}
+                    onChangeRelayNumberField={this.props.onChangeRelayNumberField}
+                    onChangeRelayNameField={this.props.onChangeRelayNameField}
+                />
+            )
+        } else {
             return (
                 <View style={styles.layout}>
                     <Header onSettingsClick={this.props.onSettingsClick.bind(this)}/>
@@ -37,20 +63,7 @@ const RelayBoard = class extends Component {
                     <Footer/>
                 </View>
             )
-        } else if (state.mode == 'app_settings') {
-            return (<AppSettings
-                            host={this.props.host}
-                            port={this.props.port}
-                            errors={this.props.errors}
-                            saveSettingsClick={this.props.saveSettingsClick}
-                            cancelSettingsClick={this.props.cancelSettingsClick}
-                            onSettingsClick={this.props.onSettingsClick}
-                            onChangePortField={this.props.onChangePortField}
-                            onChangeHostField={this.props.onChangeHostField}
-                        />
-            )
         }
-
     }
 
     componentDidMount() {

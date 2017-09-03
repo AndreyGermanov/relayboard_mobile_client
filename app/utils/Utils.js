@@ -117,10 +117,10 @@ export const saveSettings = (state,callback) => {
 
 export const getObjectKeysById = (id,collection) => {
     var result = [];
-    return _.forEach(collection,function(item,key) {
-        if (item.id === id) {
+    for (var key in collection) {
+        if (collection[key].id == id) {
             result.push(key);
         }
-    })
+    }
     return result;
 }

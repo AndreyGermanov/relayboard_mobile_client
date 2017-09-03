@@ -50,6 +50,12 @@ export const setSettingsErrors = (errors) => {
     }
 }
 
+export const setRelaySettingsErrors = (errors) => {
+    return {
+        type: 'SET_RELAY_SETTINGS_ERRORS',
+        errors: errors
+    }
+}
 export const deleteRelay = (number,mode) => {
     return (dispatch,getState) => {
         if (mode == 1) {
@@ -89,10 +95,25 @@ export const changePortField = (value) => {
     }
 }
 
+export const changeRelayNumberField = (index,value) => {
+    return {
+        type: 'CHANGE_RELAY_NUMBER_FIELD',
+        value: value,
+        index: index
+    }
+}
+
+export const changeRelayNameField = (index,value) => {
+    return {
+        type: 'CHANGE_RELAY_NAME_FIELD',
+        value: value,
+        index: index
+    }
+}
+
 export const editRelay = (number) => {
     return {
         type: 'EDIT_RELAY',
         number: number
     }
 }
-
