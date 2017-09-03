@@ -34,7 +34,7 @@ const mapDispatchToProps = (dispatch,ownProps) => {
         onEditRelay: (number) => {
             dispatch(editRelay(number))
         },
-        saveSettingsClick: () => {
+        onSaveSettingsClick: () => {
             var state = ownProps.store.getState();
             var errors = {};
             if (!state.settings.host) {
@@ -56,7 +56,7 @@ const mapDispatchToProps = (dispatch,ownProps) => {
                 })
             }
         },
-        saveRelaySettingsClick: () => {
+        onSaveRelaySettingsClick: () => {
             var state = ownProps.store.getState();
             var errors = {};
             var relay_index = getObjectKeysById(state.current_relay,state.relays)[0];
@@ -79,10 +79,10 @@ const mapDispatchToProps = (dispatch,ownProps) => {
                 })
             }
         },
-        cancelSettingsClick: () => {
+        onCancelSettingsClick: () => {
             dispatch(updateMode('relay_list'));
         },
-        cancelRelaySettingsClick: () => {
+        onCancelRelaySettingsClick: () => {
             dispatch(updateMode('relay_list'));
         },
         onSettingsClick: () => {
