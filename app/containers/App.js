@@ -62,7 +62,7 @@ const mapDispatchToProps = (dispatch,ownProps) => {
             var relay_index = getObjectKeysById(state.current_relay,state.relays)[0];
             if (!state.relays[relay_index].id) {
                 errors['id'] = 'Relay number must be specified';
-            } else if (state.relays[state.current_relay].id != parseInt(state.relays[state.current_relay].id)) {
+            } else if (state.relays[relay_index].id != parseInt(state.relays[relay_index].id)) {
                 errors['id'] = 'Relay number must be integer';
             }
             if (!state.relays[relay_index].name) {

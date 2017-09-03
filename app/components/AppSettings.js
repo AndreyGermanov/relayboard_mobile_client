@@ -10,14 +10,14 @@ var AppSettings = class extends Component {
         var self = this,
             hostError = null,
             portError =null;
-        if (this.props.errors.settings.host) {
+        if (this.props.errors.host) {
             hostError = <FormValidationMessage>
-                {this.props.errors.settings.host};
+                {this.props.errors.host};
             </FormValidationMessage>
         }
-        if (this.props.errors.settings.port) {
+        if (this.props.errors.port) {
             portError = <FormValidationMessage>
-                {this.props.errors.settings.port};
+                {this.props.errors.port};
             </FormValidationMessage>
         }
         return (

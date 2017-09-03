@@ -42,14 +42,15 @@ var Reducer = (state,action) => {
             break;
         case 'DELETE_RELAY':
             var relays = _.cloneDeep(newState.relays);
-            var keys = findObjectKeysById(relays,action.number);
+            var keys = getObjectKeysById(action.number,relays);
+            newState.current_relay = null;
             if (keys) {
                 while (keys.length) {
-                    delete relays[keys[0]];
-                    keys = findObjectKeysById(relays, action.number);
+                    delete relays.splice(keys[0],1);
+                    keys = getObjectKeysById(action.number,relays);
                 }
             }
-            newState.current_relay = null;
+
             newState.relays = _.cloneDeep(relays);
             newState.mode = 'relay_list';
             break;
