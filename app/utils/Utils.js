@@ -15,7 +15,7 @@ export const getInitialState = (callback) => {
         relays: [
             {id:1,name:'Empty now'},
             {id:2,name:'Empty now'},
-            {id:3,name:'Empty noew'},
+            {id:3,name:'Empty now'},
             {id:4,name:'Empty now'},
             {id:5,name:'Empty now'},
             {id:6,name:'Empty now'},
