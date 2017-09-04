@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {View,Text} from 'react-native'
+import {View,Text,ScrollView} from 'react-native'
 import {FormLabel,FormInput,FormValidationMessage} from 'react-native-elements';
 import styles from '../utils/StyleSheet';
 import SaveSettingsFooter from './SaveSettingsFooter';
@@ -7,8 +7,7 @@ import Header from './Header';
 
 var RelaySettings = class extends Component {
     render() {
-        var self = this,
-            relayNameError = null,
+        var relayNameError = null,
             relayNumberError =null;
         if (this.props.errors.id) {
             relayNumberError = <FormValidationMessage>
@@ -23,21 +22,21 @@ var RelaySettings = class extends Component {
         return (
             <View style={styles.layout}>
                 <Header onSettingsClick={this.props.onSettingsClick.bind(this)}/>
-                <View style={styles.body}>
+                <ScrollView>
                     <FormLabel>Digital PIN number</FormLabel>
                     {relayNumberError}
-                    <FormInput value={this.props.number.toString()} onChangeText={this.props.onChangeRelayNumberField}/>
+                    <FormInput value={this.props.id.toString()} onChangeText={this.props.onChangeRelayNumberField}/>
                     <FormLabel>Relay name</FormLabel>
                     {relayNameError}
                     <FormInput value={this.props.name.toString()}  onChangeText={this.props.onChangeRelayNameField}/>
-                </View>
+                </ScrollView>
                 <SaveSettingsFooter
-                    onSaveClick={this.props.saveSettingsClick.bind(this)}
-                    onCancelClick={this.props.cancelSettingsClick.bind(this)}
+                    onSaveClick={this.props.onSaveSettingsClick.bind(this)}
+                    onCancelClick={this.props.onCancelSettingsClick.bind(this)}
                 />
             </View>
         )
     }
-}
+};
 
 export default RelaySettings;

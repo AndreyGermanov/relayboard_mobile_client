@@ -22,7 +22,7 @@ var SaveSettingsFooter = class extends Component {
             </View>
         )
     }
-}
+};
 
 buttonStyles = StyleSheet.create({
     button: {
@@ -36,5 +36,5 @@ buttonStyles = StyleSheet.create({
         backgroundColor: 'red',
         borderBottomColor: 'darkred'
     }
-})
+});
 export default SaveSettingsFooter;

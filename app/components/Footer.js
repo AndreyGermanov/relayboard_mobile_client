@@ -6,7 +6,7 @@ import styles from '../utils/StyleSheet';
 var Footer = class extends Component {
     render() {
         return (
-            <TouchableHighlight>
+            <TouchableHighlight onPress={this.props.onNewRelay.bind(this)}>
             <View style={{height:48}}>
                     <View style={styles.footer}>
                         <Icon name='plus' style={styles.headerText}/>
@@ -16,7 +16,7 @@ var Footer = class extends Component {
             </TouchableHighlight>
         )
     }
-}
+};
 
 export default Footer;
 

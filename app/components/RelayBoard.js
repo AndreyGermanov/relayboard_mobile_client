@@ -1,14 +1,10 @@
 import React,{Component} from 'react';
 import {View,Text,Alert,ScrollView} from 'react-native';
-import {loadState} from '../actions/Actions';
-import styles from '../utils/StyleSheet';
-import Header from './Header';
-import RelayList from './RelaysList';
-import Footer from './Footer';
-import AppSettings from './AppSettings';
-import RelaySettings from './RelaySettings';
-
-import {deleteRelay,updateMode} from '../actions/Actions';
+import RelayList from '../containers/RelayListContainer';
+import AppSettings from '../containers/AppSettingsContainer';
+import RelaySettings from '../containers/RelaySettingsContainer';
+import AppActions from '../actions/AppActions';
+import RelayListActions from '../actions/RelayListActions';
 
 const RelayBoard = class extends Component {
     render() {
@@ -19,49 +15,23 @@ const RelayBoard = class extends Component {
                 'Remove relay',
                 'Are you sure',
                 [
-                    {text: 'Yes', onPress: () => {self.props.store.dispatch(deleteRelay(state.current_relay,2))}},
-                    {text: 'No', onPress: () => self.props.store.dispatch(updateMode('relay_list'))},
+                    {text: 'Yes', onPress: () => {self.props.store.dispatch(RelayListActions.deleteRelay(state.current_relay,2))}},
+                    {text: 'No', onPress: () => self.props.store.dispatch(AppActions.updateMode('relay_list'))}
                 ],
                 { cancelable: false }
             )
         }
         if (state.mode == 'app_settings') {
             return (
-                <AppSettings
-                    host={this.props.host}
-                    port={this.props.port}
-                    errors={this.props.errors}
-                    onSaveSettingsClick={this.props.onSaveSettingsClick}
-                    onCancelSettingsClick={this.props.onCancelSettingsClick}
-                    onSettingsClick={this.props.onSettingsClick}
-                    onChangePortField={this.props.onChangePortField}
-                    onChangeHostField={this.props.onChangeHostField}
-                />
+                <AppSettings store={this.props.store} />
             )
         } else if (state.mode == 'relay_settings') {
             return (
-                <RelaySettings
-                    number={this.props.relay_number}
-                    name={this.props.relay_name}
-                    errors={this.props.errors}
-                    onSaveSettingsClick={this.props.onSaveRelaySettingsClick}
-                    onCancelSettingsClick={this.props.onCancelRelaySettingsClick}
-                    onSettingsClick={this.props.onSettingsClick}
-                    onChangeRelayNumberField={this.props.onChangeRelayNumberField}
-                    onChangeRelayNameField={this.props.onChangeRelayNameField}
-                />
+                <RelaySettings store={this.props.store} />
             )
         } else {
             return (
-                <View style={styles.layout}>
-                    <Header onSettingsClick={this.props.onSettingsClick.bind(this)}/>
-                    <View style={styles.body}>
-                        <RelayList onSwitchRelay={this.props.onSwitchRelay} onDeleteRelay={this.props.onDeleteRelay}
-                                   onEditRelay={this.props.onEditRelay} relays={this.props.relays}
-                                   status={this.props.status}/>
-                    </View>
-                    <Footer/>
-                </View>
+                <RelayList store={this.props.store}/>
             )
         }
     }
@@ -69,7 +39,7 @@ const RelayBoard = class extends Component {
     componentDidMount() {
         var state = this.props.store.getState();
         if (!state.loaded) {
-            this.props.store.dispatch(loadState());
+            this.props.store.dispatch(AppActions.loadState());
         }
         this.unsubscribe = this.props.store.subscribe(this.handleChange.bind(this));
     }
@@ -77,12 +47,12 @@ const RelayBoard = class extends Component {
     componentWillUnmount() {
         if (typeof(this.unsubscribe) != 'undefined') {
             this.unsubscribe();
-        };
+        }
     }
 
     handleChange() {
         this.setState(this.props.store.getState());
     }
-}
+};
 
 export default RelayBoard;

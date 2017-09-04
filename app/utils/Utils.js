@@ -8,16 +8,15 @@ export var savedState = {};
 export const getInitialState = (callback) => {
     // default demo data
     var state = {
-        mode: 'relay_list',
         settings: {
             host: 'http://localhost',
             port: 8082
         },
         relays: [
-            {id:1,name:'Water pump'},
+            {id:1,name:'Empty now'},
             {id:2,name:'Empty now'},
-            {id:3,name:'Lamp'},
-            {id:4,name:'Fan'},
+            {id:3,name:'Empty noew'},
+            {id:4,name:'Empty now'},
             {id:5,name:'Empty now'},
             {id:6,name:'Empty now'},
             {id:7,name:'Empty now'},
@@ -27,12 +26,7 @@ export const getInitialState = (callback) => {
             {id:11,name:'Empty now'},
             {id:12,name:'Empty now'}
         ],
-        status: [0,0,1,0,0,0,0,0,0,0,0,0],
-        loaded: true,
-        errors: {
-            settings: {},
-            relays: {}
-        }
+        status: [0,0,1,0,0,0,0,0,0,0,0,0]
     }
     // Get general settings from Application storage
     async.series([
@@ -43,7 +37,9 @@ export const getInitialState = (callback) => {
                 if (settings) {
                     try {
                         settings = JSON.parse(settings);
-                        state.settings = settings;
+                        if (settings.host) {
+                            state.settings = settings;
+                        }
                         callback();
                     } catch (e) {
                         callback();
@@ -59,7 +55,10 @@ export const getInitialState = (callback) => {
                 var relays = result;
                 if (relays) {
                     try {
-                        state.relays = JSON.parse(relays);
+                        relays = JSON.parse(relays);
+                        if (relays.length) {
+                            state.relays = relays;
+                        }
                         callback();
                     } catch (e) {
                         callback();
@@ -71,17 +70,21 @@ export const getInitialState = (callback) => {
         },
         // Based on Global settings, requesting server to obtain current status of relays
         function(callback) {
-            fetch(state.settings.host+':'+state.settings.port+'/request/STATUS').then(function(response) {
-                if (response.ok) {
-                    var response = response.json();
-                    if (typeof(response['STATUS'] != 'undefined') && response['STATUS']) {
-                        state.status = response.json();
-                    }
-                };
+            if (state.settings.host && state.settings.port) {
+                fetch(state.settings.host+':'+state.settings.port+'/request/STATUS').then(function(response) {
+                    if (response.ok) {
+                        var response = response.json();
+                        if (typeof(response['STATUS'] != 'undefined') && response['STATUS']) {
+                            state.status = response.json();
+                        }
+                    };
+                    callback();
+                }).catch(function() {
+                    callback();
+                })
+            } else {
                 callback();
-            }).catch(function() {
-                callback();
-            })
+            }
         }
     ],function() {
         // Persist this as etalon state
@@ -125,7 +128,6 @@ export const saveSettings = (state,callback) => {
     });
 }
 
-// Utility function which returns array of indexes of "collection" items, with provided "id" attribute
 export const getObjectKeysById = (id,collection) => {
     var result = [];
     for (var key in collection) {
@@ -134,4 +136,28 @@ export const getObjectKeysById = (id,collection) => {
         }
     }
     return result;
+}
+
+export const getMaxId = (collection) =>{
+    var max = 0;
+    for (var i in collection) {
+        if (collection[i].id>max) {
+            max = collection[i].id;
+        }
+    }
+    return max;
+}
+
+export const findFreeId = (collection) => {
+    var current_id = 0;
+    for (var i in collection) {
+        if (collection[i].id-current_id>1) {
+            return collection[i].id-1;
+        }
+        current_id = collection[i].id;
+        if (current_id>12) {
+            return null;
+        }
+    }
+    return null;
 }

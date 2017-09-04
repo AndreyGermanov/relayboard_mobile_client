@@ -15,7 +15,7 @@ var Header = class extends Component {
             </View>
         )
     }
-}
+};
 
 export default Header;
 
