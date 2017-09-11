@@ -6,6 +6,9 @@ var AppSettingsReducer = (state,action) => {
         state = {
             host: 'localhost',
             port: '8082',
+            mode: 'local',
+            login: '',
+            password: '',
             errors: {}
         };
     }
@@ -16,6 +19,15 @@ var AppSettingsReducer = (state,action) => {
             break;
         case actions.types.CHANGE_HOST_FIELD:
             newState.host = action.value;
+            break;
+        case actions.types.CHANGE_MODE_FIELD:
+            newState.mode = action.value;
+            break;
+        case actions.types.CHANGE_LOGIN_FIELD:
+            newState.login = action.value;
+            break;
+        case actions.types.CHANGE_PASSWORD_FIELD:
+            newState.password = action.value;
             break;
         case actions.types.SET_SETTINGS_ERRORS:
             newState.errors = {};

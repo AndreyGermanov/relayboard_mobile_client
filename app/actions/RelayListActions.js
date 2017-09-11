@@ -4,6 +4,12 @@ import AppActions from './AppActions';
 
 var RelayListActions = class {
 
+    constructor() {
+        this.types = {
+            UPDATE_STATUS: 'UPDATE_STATUS'
+        }
+    }
+
     deleteRelay(number,mode) {
         var self = this;
         return (dispatch,getState) => {
@@ -35,6 +41,13 @@ var RelayListActions = class {
                 dispatch(AppActions.loadState());
             },function(err) {
             });
+        }
+    }
+
+    updateStatus(status) {
+        return {
+            type: this.types.UPDATE_STATUS,
+            status: status
         }
     }
 };

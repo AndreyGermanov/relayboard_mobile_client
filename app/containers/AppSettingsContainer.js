@@ -26,6 +26,11 @@ const mapDispatchToProps = (dispatch,ownProps) => {
             } else if (state.AppSettings.port != parseInt(state.AppSettings.port)) {
                 errors['port'] = 'Port must be a number';
             }
+            if (state.AppSettings.mode=='portal') {
+                if (!state.AppSettings.login) {
+                    errors['login'] = 'Login must be specified';
+                }
+            }
             if (errors && _.size(errors)) {
                 dispatch(AppSettingsActions.setSettingsErrors(errors));
             } else {
@@ -43,6 +48,15 @@ const mapDispatchToProps = (dispatch,ownProps) => {
         },
         onChangeHostField: (value) => {
             dispatch(AppSettingsActions.changeHostField(value))
+        },
+        onChangeModeField: (value) => {
+            dispatch(AppSettingsActions.changeModeField(value))
+        },
+        onChangeLoginField: (value) => {
+            dispatch(AppSettingsActions.changeLoginField(value))
+        },
+        onChangePasswordField: (value) => {
+            dispatch(AppSettingsActions.changePasswordField(value))
         },
         onSettingsClick: () => {
 

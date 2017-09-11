@@ -9,6 +9,11 @@ var RelayListReducer = (state,action) => {
         }
     }
     var newState = _.cloneDeep(state);
+    switch (action.type) {
+        case actions.types.UPDATE_STATUS:
+            newState.status = action.status;
+            break;
+    }
     return newState;
 };
 

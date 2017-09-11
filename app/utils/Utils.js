@@ -10,7 +10,7 @@ export const getInitialState = (callback) => {
     var state = {
         settings: {
             host: 'http://localhost',
-            port: 8082
+            port: 8082,
         },
         relays: [
             {id:1,name:'Empty now'},
@@ -28,6 +28,9 @@ export const getInitialState = (callback) => {
         ],
         status: [0,0,1,0,0,0,0,0,0,0,0,0]
     }
+
+    var self = this;
+
     // Get general settings from Application storage
     async.series([
         // Getting global application settings from local storage
@@ -71,19 +74,12 @@ export const getInitialState = (callback) => {
         // Based on Global settings, requesting server to obtain current status of relays
         function(callback) {
             if (state.settings.host && state.settings.port) {
-                fetch(state.settings.host+':'+state.settings.port+'/request/STATUS').then(function(response) {
-                    if (response.ok) {
-                        var response = response.json();
-                        if (typeof(response['STATUS'] != 'undefined') && response['STATUS']) {
-                            state.status = response.json();
-                        }
-                    };
+                getRelayStatus(function (status) {
+                    if (status) {
+                        state.status = status;
+                    }
                     callback();
-                }).catch(function() {
-                    callback();
-                })
-            } else {
-                callback();
+                });
             }
         }
     ],function() {
@@ -95,6 +91,30 @@ export const getInitialState = (callback) => {
         }
     });
 }
+
+export const getRelayStatus = (callback) => {
+    if (savedState && savedState.settings) {
+        if (typeof(savedState.settings.mode) == 'undefined' || savedState.settings.mode != 'portal') {
+            fetch(savedState.settings.host + ':' + savedState.settings.port + '/request/STATUS').then(function (response) {
+                if (response.ok) {
+                    response.json().then(function(json) {
+                        if (typeof(json['STATUS'] != 'undefined') && json['STATUS']) {
+                            callback(json['STATUS'].split(','));
+                        }
+                    });
+                } else {
+                    callback();
+                }
+            }).catch(function () {
+                callback();
+            })
+        } else {
+            callback();
+        }
+    } else {
+        callback();
+    }
+};
 
 // Save current state of application to local storage
 export const saveSettings = (state,callback) => {
