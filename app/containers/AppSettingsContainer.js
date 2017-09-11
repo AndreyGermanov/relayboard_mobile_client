@@ -9,6 +9,9 @@ const mapStateToProps = (state) => {
     return {
         host: state.AppSettings.host,
         port: state.AppSettings.port,
+        mode: state.AppSettings.mode,
+        login: state.AppSettings.login,
+        password: state.AppSettings.password,
         errors: state.AppSettings.errors
     }
 };
@@ -34,7 +37,15 @@ const mapDispatchToProps = (dispatch,ownProps) => {
             if (errors && _.size(errors)) {
                 dispatch(AppSettingsActions.setSettingsErrors(errors));
             } else {
-                saveSettings({settings: {host: state.AppSettings.host, port: state.AppSettings.port}}, function () {
+                saveSettings({
+                    settings: {
+                        host: state.AppSettings.host,
+                        port: state.AppSettings.port,
+                        mode:state.AppSettings.mode,
+                        login:state.AppSettings.login,
+                        password: state.AppSettings.password
+                    }
+                }, function () {
                     dispatch(AppActions.updateMode('relay_list'));
                     dispatch(AppActions.loadState());
                 })
@@ -49,7 +60,12 @@ const mapDispatchToProps = (dispatch,ownProps) => {
         onChangeHostField: (value) => {
             dispatch(AppSettingsActions.changeHostField(value))
         },
-        onChangeModeField: (value) => {
+        onChangeModeField: (index) => {
+            if (index==0) {
+                value = 'local';
+            } else if (index==1) {
+                value = 'portal';
+            };
             dispatch(AppSettingsActions.changeModeField(value))
         },
         onChangeLoginField: (value) => {

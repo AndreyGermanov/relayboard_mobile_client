@@ -1,8 +1,10 @@
 import {AsyncStorage} from 'react-native';
 import async from 'async';
 import _ from 'lodash';
+import Meteor from 'react-native-meteor';
 
 export var savedState = {};
+export var lastUpdateTime = 0;
 
 // Function loads application data on application load
 export const getInitialState = (callback) => {
@@ -108,8 +110,42 @@ export const getRelayStatus = (callback) => {
             }).catch(function () {
                 callback();
             })
-        } else {
-            callback();
+        } else if (savedState.settings.mode == 'portal') {
+            async.series([
+                function(callback) {
+                    if (Date.now()-lastUpdateTime>20000) {
+                        connectToPortal(function(err) {
+                            if (err) {
+                                callback(err);
+                            }
+                            callback();
+                        })
+                    } else {
+                        callback();
+                    }
+                },function(callback) {
+                    try {
+                        Meteor.call('getStatus', [],function (err,result) {
+                            try {
+                                result = JSON.parse(result);
+                            } catch (e) {
+
+                            }
+                            if (result && typeof(result) == 'object') {
+                                if (result.length == 1) {
+                                    data = result.shift();
+                                    callback(data.status.STATUS.split(','));
+                                }
+                                lastUpdateTime = Date.now();
+                            }
+                        })
+                    } catch(e) {
+
+                    }
+                }
+            ],function(res) {
+                callback(res);
+            })
         }
     } else {
         callback();
@@ -180,4 +216,13 @@ export const findFreeId = (collection) => {
         }
     }
     return null;
+}
+
+export const connectToPortal = (callback) => {
+    if (savedState.settings.login && savedState.settings.password) {
+        Meteor.connect('ws://'+savedState.settings.host+':'+savedState.settings.port+'/websocket');
+        Meteor.loginWithPassword(savedState.settings.login,savedState.settings.password, function(err) {
+            callback(err);
+        })
+    }
 }

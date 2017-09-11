@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {View,Text,ScrollView} from 'react-native'
-import {FormLabel,FormInput,FormValidationMessage} from 'react-native-elements';
+import {FormLabel,FormInput,FormValidationMessage,ButtonGroup} from 'react-native-elements';
 import styles from '../utils/StyleSheet';
 import SaveSettingsFooter from './SaveSettingsFooter';
 import Header from './Header';
@@ -8,7 +8,8 @@ import Header from './Header';
 var AppSettings = class extends Component {
     render() {
         var hostError = null,
-            portError =null;
+            portError =null,
+            loginError = null;
         if (this.props.errors.host) {
             hostError = <FormValidationMessage>
                 {this.props.errors.host};
@@ -18,6 +19,25 @@ var AppSettings = class extends Component {
             portError = <FormValidationMessage>
                 {this.props.errors.port};
             </FormValidationMessage>
+        }
+        if (this.props.errors.login) {
+            loginError = <FormValidationMessage>
+                {this.props.errors.login};
+            </FormValidationMessage>
+        }
+        var selectedIndex = 0,
+            loginField = null,
+            passwordField = null;
+        if (this.props.mode == 'portal') {
+            selectedIndex = 1;
+            loginField = [
+                <FormLabel>Login</FormLabel>,
+                <FormInput value={this.props.login} onChangeText={this.props.onChangeLoginField}/>,
+            ];
+            passwordField = [
+                <FormLabel>Password</FormLabel>,
+                <FormInput value={this.props.password} onChangeText={this.props.onChangePasswordField}/>,
+            ]
         }
         return (
             <View style={styles.layout}>
@@ -29,6 +49,17 @@ var AppSettings = class extends Component {
                     <FormLabel>Server port</FormLabel>
                     {portError}
                     <FormInput value={this.props.port.toString()}  onChangeText={this.props.onChangePortField}/>
+                    <FormLabel>Server type</FormLabel>
+                    <ButtonGroup onPress={this.props.onChangeModeField.bind(this)}
+                                 buttons={['Local','Portal']}
+                                 selectedIndex={selectedIndex}
+                                 selectedBackgroundColor="darkgreen"
+                                 selectedTextStyle={{color:'white'}}
+
+                    />
+                    {loginField}
+                    {loginError}
+                    {passwordField}
                 </ScrollView>
                 <SaveSettingsFooter
                     onSaveClick={this.props.onSaveSettingsClick.bind(this)}
