@@ -31,12 +31,12 @@ var AppSettings = class extends Component {
         if (this.props.mode == 'portal') {
             selectedIndex = 1;
             loginField = [
-                <FormLabel>Login</FormLabel>,
-                <FormInput value={this.props.login} onChangeText={this.props.onChangeLoginField}/>,
+                <FormLabel key="login_label">Login</FormLabel>,
+                <FormInput key="login_input" value={this.props.login} onChangeText={this.props.onChangeLoginField}/>,
             ];
             passwordField = [
-                <FormLabel>Password</FormLabel>,
-                <FormInput value={this.props.password} onChangeText={this.props.onChangePasswordField}/>,
+                <FormLabel key="password_label">Password</FormLabel>,
+                <FormInput key="password_input" value={this.props.password} onChangeText={this.props.onChangePasswordField}/>,
             ]
         }
         return (

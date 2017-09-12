@@ -63,7 +63,15 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'red'
-    }
+    },
+    buttonInactive: {
+        borderColor: '#666666',
+        backgroundColor: '#ffffff',
+        opacity: 1
+    },
+    buttonInactiveText: {
+        color: '#666666'
+    },
 });
 
 export default styles;

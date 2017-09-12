@@ -3,10 +3,9 @@ import RelayList from '../components/RelaysList';
 import RelayListActions from '../actions/RelayListActions';
 import RelaySettingsActions from '../actions/RelaySettingsActions';
 import AppActions from '../actions/AppActions';
-import {findFreeId} from '../utils/Utils';
+import Store from '../store/Store';
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return {
         relays: state.RelayList.relays,
         status: state.RelayList.status
@@ -30,8 +29,7 @@ const mapDispatchToProps = (dispatch,ownProps) => {
         },
         onNewRelay: () => {
             var state = ownProps.store.getState();
-            var relay_list = state.RelayList.relays;
-            var id = findFreeId(relay_list);
+            var id = Store.findFreeId();
             dispatch(RelaySettingsActions.editRelay(null,id,''));
             dispatch(AppActions.updateMode('relay_settings'));
         }

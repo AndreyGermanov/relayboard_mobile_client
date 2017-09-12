@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {saveSettings,savedState,getObjectKeysById} from '../utils/Utils';
+import Store from '../store/Store';
 import AppActions from './AppActions';
 
 var RelayListActions = class {
@@ -17,13 +17,13 @@ var RelayListActions = class {
                 dispatch(AppActions.showDeleteRelayAlertDialog(number));
             } else if (mode == 2) {
                 var state = getState();
-                var relay_list = _.cloneDeep(state.RelayList.relays);
-                var relay_indexes = getObjectKeysById(number,relay_list);
+                var relay_list = _.cloneDeep(Store.settings.relays);
+                var relay_indexes = Store.getObjectKeysById(number);
                 if (relay_indexes && relay_indexes.length) {
                     var relay_index = relay_indexes[0];
                     relay_list.splice(relay_index,1);
                     dispatch(AppActions.updateMode('relay_list'));
-                    saveSettings({relays:relay_list}, function () {
+                    Store.saveSettings({relays:relay_list}, function () {
                         dispatch(AppActions.loadState())
                     });
                 }
@@ -32,14 +32,10 @@ var RelayListActions = class {
     }
 
     switchRelay(number) {
+        var self = this;
         return (dispatch) => {
-            var mode = 'ON';
-            if (savedState.status[number-1]==1) {
-                mode = 'OFF';
-            }
-            fetch(savedState.settings.host+':'+savedState.settings.port+'/request/'+mode+'/'+number).then(function() {
-                dispatch(AppActions.loadState());
-            },function(err) {
+            Store.switchRelay(number, function (status) {
+                dispatch(self.updateStatus(status));
             });
         }
     }

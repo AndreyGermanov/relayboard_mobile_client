@@ -18,26 +18,29 @@ const RelayList = class extends Component {
                     buttonStyle = styles.button;
                     buttonTextStyle = styles.buttonText;
                 }
-                return (
-                            <View style={styles.buttonContainer} key={'relay_view_'+index}>
-                                <View style={buttonStyle} key={'relay_button_'+index}>
-                                    <TouchableHighlight onPress={this.props.onSwitchRelay.bind(this,relay.id)}>
-                                        <Icon name="power-off" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
-                                    </TouchableHighlight>
-                                    <View style={{flex:1,flexDirection:'row',justifyContent:'center'}}>
-                                        <Text style={[buttonTextStyle,{flex:1}]}
-                                              key={'relay_text_'+relay.id}>{relay.name}</Text>
-                                    </View>
-                                    <TouchableHighlight onPress={this.props.onEditRelay.bind(this,index,relay.id,relay.name)}>
-                                        <Icon name="cog" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
-                                    </TouchableHighlight>
-                                    <TouchableHighlight onPress={this.props.onDeleteRelay.bind(this,relay.id,1)}>
-                                        <Icon name="ban" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
-                                    </TouchableHighlight>
-                                </View>
-                            </View>
-                )
+            } else {
+                buttonStyle = [styles.button,styles.buttonInactive];
+                buttonTextStyle = styles.buttonInactiveText;
             }
+            return (
+                <View style={styles.buttonContainer} key={'relay_view_'+index}>
+                    <View style={buttonStyle} key={'relay_button_'+index}>
+                        <TouchableHighlight onPress={this.props.onSwitchRelay.bind(this,relay.id)}>
+                            <Icon name="power-off" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
+                        </TouchableHighlight>
+                        <View style={{flex:1,flexDirection:'row',justifyContent:'center'}}>
+                            <Text style={[buttonTextStyle,{flex:1}]}
+                                  key={'relay_text_'+relay.id}>{relay.name}</Text>
+                        </View>
+                        <TouchableHighlight onPress={this.props.onEditRelay.bind(this,index,relay.id,relay.name)}>
+                            <Icon name="cog" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
+                        </TouchableHighlight>
+                        <TouchableHighlight onPress={this.props.onDeleteRelay.bind(this,relay.id,1)}>
+                            <Icon name="ban" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+            )
         },this);
         var footer = <Footer onNewRelay={this.props.onNewRelay}/>;
         var state = this.props.store.getState();
@@ -56,7 +59,7 @@ const RelayList = class extends Component {
                 </View>
                 {footer}
             </View>
-        )
+        );
     }
 };
 

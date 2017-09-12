@@ -1,4 +1,4 @@
-import {getInitialState} from '../utils/Utils';
+import Store from '../store/Store';
 
 var AppActions = class {
     constructor() {
@@ -19,7 +19,7 @@ var AppActions = class {
     loadState()  {
         var self = this;
         return (dispatch) => {
-            return getInitialState(function(state) {
+            return Store.getSettings(function(state) {
                 dispatch(self.updateState(state));
             })
         }

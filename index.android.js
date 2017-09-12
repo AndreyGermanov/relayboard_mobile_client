@@ -3,24 +3,23 @@
  * https://github.com/AndreyGermanov/relayboard_mobile_client
  * @flow
  */
-
 import React, { Component } from 'react';
 import {AppRegistry} from 'react-native';
-
-import {createStore,applyMiddleware} from 'redux';
-import thunkMiddleware from 'redux-thunk';
 import {Provider} from 'react-redux';
-import Board from './app/components/RelayBoard';
+import {createStore,applyMiddleware} from 'redux';
+import Store from './app/store/Store';
+import thunkMiddleware from 'redux-thunk';
 import Reducer from './app/reducers/RootReducer';
+import Board from './app/components/RelayBoard';
 
-const store = createStore(Reducer,applyMiddleware(thunkMiddleware));
+Store.store = createStore(Reducer,applyMiddleware(thunkMiddleware));
 
 // Creating root object based on wrapper "App" container. Store and Reducer provided to it
 var RelayBoard = class extends Component {
     render() {
       return (
-          <Provider store={store}>
-            <Board store={store} />
+          <Provider store={Store.store}>
+            <Board store={Store.store} />
           </Provider>
       );
     }

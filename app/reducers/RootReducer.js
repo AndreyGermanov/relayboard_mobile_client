@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {savedState} from '../utils/Utils';
+import Store from '../store/Store';
 import AppSettingsReducer from './AppSettingsReducer';
 import RelaySettingsReducer from './RelaySettingsReducer';
 import RelayListReducer from './RelayListReducer';
@@ -36,8 +36,8 @@ var RootReducer = (state,action) => {
             if (action.state.status) {
                 newState.RelayList.status = _.cloneDeep(action.state.status);
             }
-            if (action.state.settings) {
-                newState.AppSettings = _.cloneDeep(action.state.settings);
+            if (action.state.app) {
+                newState.AppSettings = _.cloneDeep(action.state.app);
                 newState.AppSettings.errors = {};
             }
             newState.loaded = true;
@@ -47,8 +47,8 @@ var RootReducer = (state,action) => {
             if (newState.mode == 'relay_list') {
                 newState.current_relay = 0;
             } else if (newState.mode == 'app_settings' && action.mode == 'relay_list') {
-                newState.AppSettings.host = savedState.settings.host;
-                newState.AppSettings.port = savedState.settings.port;
+                newState.AppSettings.host = Store.settings.app.host;
+                newState.AppSettings.port = Store.settings.app.port;
                 newState.AppSettings.errors = {};
             } else if (newState.mode == 'relay_settings' && action.mode == 'relay_list') {
                 if (newState.current_relay) {

@@ -5,7 +5,7 @@ import AppSettings from '../containers/AppSettingsContainer';
 import RelaySettings from '../containers/RelaySettingsContainer';
 import AppActions from '../actions/AppActions';
 import RelayListActions from '../actions/RelayListActions';
-import {getRelayStatus,savedState,connectToPortal} from '../utils/Utils';
+import Store from '../store/Store';
 
 const RelayBoard = class extends Component {
     render() {
@@ -43,12 +43,15 @@ const RelayBoard = class extends Component {
             this.props.store.dispatch(AppActions.loadState());
         }
         var self = this;
-
         this.interval = setInterval(function () {
-            getRelayStatus(function (status) {
+            Store.getRelayStatus(function (status,relays_changed) {
                 if (status) {
-                    console.log(status);
                     self.props.store.dispatch(RelayListActions.updateStatus(status));
+                } else {
+                    self.props.store.dispatch(RelayListActions.updateStatus([]));
+                }
+                if (relays_changed) {
+                    self.props.store.dispatch(AppActions.loadState());
                 }
             })
         }, 5000);

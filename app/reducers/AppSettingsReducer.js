@@ -5,7 +5,7 @@ var AppSettingsReducer = (state,action) => {
     if (typeof(state) == 'undefined') {
         state = {
             host: 'localhost',
-            port: '8082',
+            port: '80',
             mode: 'local',
             login: '',
             password: '',

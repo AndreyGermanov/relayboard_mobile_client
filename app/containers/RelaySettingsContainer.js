@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import RelaySettings from '../components/RelaySettings';
 import AppActions from '../actions/AppActions';
 import RelaySettingsActions from '../actions/RelaySettingsActions';
-import {saveSettings,getObjectKeysById} from '../utils/Utils';
+import Store from '../store/Store';
 
 var mapStateToProps = (state) => {
     return {
@@ -20,7 +20,7 @@ var mapDispatchToProps = (dispatch,ownProps) => {
             var state = ownProps.store.getState();
             var errors = {};
             var state_relay = state.RelaySettings;
-            var relay_list = _.cloneDeep(state.RelayList.relays);
+            var relay_list = _.cloneDeep(Store.settings.relays);
             if (!state_relay.id) {
                 errors['id'] = 'Relay number must be specified';
             } else if (state_relay.id != parseInt(state_relay.id)) {
@@ -28,7 +28,7 @@ var mapDispatchToProps = (dispatch,ownProps) => {
             } else if (state_relay.id>12) {
                 errors['id'] = 'Relay number must be less than 12';
             } else {
-                var duplicates = getObjectKeysById(state_relay.id,relay_list);
+                var duplicates = Store.getObjectKeysById(state_relay.id);
                 if (state_relay.index!==null && relay_list[state_relay.index].id != state_relay.id) {
                     if (duplicates.length>0) {
                         errors['id'] = 'Relay with provided number already exists';
@@ -51,9 +51,9 @@ var mapDispatchToProps = (dispatch,ownProps) => {
                     id: state_relay.id,
                     name: state_relay.name
                 };
-                dispatch(AppActions.updateMode('relay_list'));
-                saveSettings({relays: relay_list}, function () {
-                    dispatch(AppActions.loadState())
+                Store.saveSettings({relays: relay_list}, function () {
+                    dispatch(AppActions.loadState());
+                    dispatch(AppActions.updateMode('relay_list'));
                 })
             }
         },

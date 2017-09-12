@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import AppSettings from '../components/AppSettings';
 import AppSettingsActions from '../actions/AppSettingsActions';
 import AppActions from '../actions/AppActions';
-import {saveSettings} from '../utils/Utils';
+import Store from '../store/Store';
 
 const mapStateToProps = (state) => {
     return {
@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch,ownProps) => {
             if (errors && _.size(errors)) {
                 dispatch(AppSettingsActions.setSettingsErrors(errors));
             } else {
-                saveSettings({
+                Store.saveSettings({
                     settings: {
                         host: state.AppSettings.host,
                         port: state.AppSettings.port,
