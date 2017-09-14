@@ -95,8 +95,8 @@ const Store = class {
                 fetch(self.http_protocol+self.settings.app.host + ':' + self.settings.app.port + '/request/STATUS').then(function (response) {
                     if (response.ok) {
                         response.json().then(function(json) {
-                            if (typeof(json['STATUS'] != 'undefined') && json['STATUS']) {
-                                var status = json['STATUS'].split(',');
+                            if (typeof(json != 'undefined') && json) {
+                                var status = json.split(',');
                                 var relays = _.cloneDeep(self.settings.relays);
                                 var changed_relays = {};
                                 var changed = false;
@@ -112,10 +112,10 @@ const Store = class {
                                 };
                                 if (changed) {
                                     self.saveSettings({relays:changed_relays}, function() {
-                                        callback(json['STATUS'].split(','), true);
+                                        callback(json.split(','), true);
                                     })
                                 } else {
-                                    callback(json['STATUS'].split(','));
+                                    callback(json.split(','));
                                 }
                             }
                         });
@@ -160,15 +160,15 @@ const Store = class {
                                 if (result && typeof(result) == 'object') {
                                     self.lastUpdateTime = Date.now();
                                     var statuses = result.statuses;
-                                    responses = result.command_responses;
-                                    if (statuses.length == 1) {
-                                        data = statuses.shift();
+                                    var responses = result.command_responses;
+                                    if (statuses.length >= 1) {
+                                        data = statuses.pop();
                                         self.currentRelayBoard = data.id;
                                         if (typeof(data.status) != 'undefined' && data.status) {
-                                            self.relays = data.status.STATUS.split(',');
+                                            self.relays = data.status;
                                             var relays = _.cloneDeep(self.settings.relays);
                                             var changed_relays = {};
-                                            var status = data.status.STATUS.split(',');
+                                            var status = data.status;
                                             var changed = false;
                                             for (var i in status) {
                                                 i = parseInt(i);

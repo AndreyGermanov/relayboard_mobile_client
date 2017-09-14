@@ -54,7 +54,7 @@ const RelayBoard = class extends Component {
                     self.props.store.dispatch(AppActions.loadState());
                 }
             })
-        }, 5000);
+        }, 1000);
         this.unsubscribe = this.props.store.subscribe(this.handleChange.bind(this));
     }
 
