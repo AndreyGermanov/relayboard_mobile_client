@@ -50,7 +50,7 @@ const RelayBoard = class extends Component {
                 } else {
                     self.props.store.dispatch(RelayListActions.updateStatus([]));
                 }
-                if (relays_changed) {
+                if (relays_changed===true) {
                     self.props.store.dispatch(AppActions.loadState());
                 }
             })

@@ -32,11 +32,11 @@ var AppSettings = class extends Component {
             selectedIndex = 1;
             loginField = [
                 <FormLabel key="login_label">Login</FormLabel>,
-                <FormInput key="login_input" value={this.props.login} onChangeText={this.props.onChangeLoginField}/>,
+                <FormInput key="login_input" value={this.props.login} onChangeText={this.props.onChangeLoginField.bind(this)}/>,
             ];
             passwordField = [
                 <FormLabel key="password_label">Password</FormLabel>,
-                <FormInput key="password_input" value={this.props.password} onChangeText={this.props.onChangePasswordField}/>,
+                <FormInput key="password_input" value={this.props.password} onChangeText={this.props.onChangePasswordField.bind(this)}/>,
             ]
         }
         return (
@@ -45,10 +45,10 @@ var AppSettings = class extends Component {
                 <ScrollView>
                     <FormLabel>Server host</FormLabel>
                     {hostError}
-                    <FormInput value={this.props.host} onChangeText={this.props.onChangeHostField}/>
+                    <FormInput value={this.props.host} onChangeText={this.props.onChangeHostField.bind(this)}/>
                     <FormLabel>Server port</FormLabel>
                     {portError}
-                    <FormInput value={this.props.port.toString()}  onChangeText={this.props.onChangePortField}/>
+                    <FormInput value={this.props.port.toString()}  onChangeText={this.props.onChangePortField.bind(this)}/>
                     <FormLabel>Server type</FormLabel>
                     <ButtonGroup onPress={this.props.onChangeModeField.bind(this)}
                                  buttons={['Local','Portal']}

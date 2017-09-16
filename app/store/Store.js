@@ -17,7 +17,7 @@ const Store = class {
             relays: {}
         };
         this.http_protocol = 'http://';
-        this.ws_protocol = 'ws://';
+        this.ws_protocol = 'wss://';
         this.relays = {};
         this.currentRelayBoard = {};
         this.lastUpdateTime = 0;
