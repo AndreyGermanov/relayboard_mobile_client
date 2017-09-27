@@ -1,9 +1,7 @@
 import React,{Component} from 'react';
-import {Text,View,ScrollView,TouchableHighlight} from 'react-native';
+import {View,ScrollView,TouchableHighlight} from 'react-native';
+import {Header,Footer,Content,Container,Title,FooterTab,Button,Left,Right,Body,Icon,Text} from 'native-base';
 import styles from '../utils/StyleSheet';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
 
 const RelayList = class extends Component {
     render() {
@@ -42,23 +40,36 @@ const RelayList = class extends Component {
                 </View>
             )
         },this);
-        var footer = <Footer onNewRelay={this.props.onNewRelay}/>;
+        /*var footer = <Footer onNewRelay={this.props.onNewRelay}/>;
         var state = this.props.store.getState();
         if (state.RelayList.relays.length>11) {
             footer = null;
         };
+        */
         return (
-            <View style={styles.layout}>
-                <Header onSettingsClick={this.props.onSettingsClick.bind(this)}/>
-                <View style={styles.body}>
-                    <ScrollView>
-                        <View style={styles.relayList}>
-                            {buttons}
-                        </View>
-                    </ScrollView>
-                </View>
-                {footer}
-            </View>
+            <Container>
+                <Header>
+                    <Left>
+                        <Button transparent>
+                            <Icon name="menu"/>
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title>Relay Board</Title>
+                    </Body>
+                    <Right/>
+                </Header>
+                <Content>
+                    <Text>Relays and Sensors</Text>
+                </Content>
+                <Footer>
+                    <FooterTab>
+                        <Button full>
+                            <Text>Add Relay</Text>
+                        </Button>
+                    </FooterTab>
+                </Footer>
+            </Container>
         );
     }
 };
