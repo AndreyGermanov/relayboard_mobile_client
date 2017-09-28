@@ -6,7 +6,8 @@ var RelayListActions = class {
 
     constructor() {
         this.types = {
-            UPDATE_STATUS: 'UPDATE_STATUS'
+            UPDATE_STATUS: 'UPDATE_STATUS',
+            UPDATE_CURRENT_RELAYBOARD: 'UPDATE_CURRENT_RELAYBOARD'
         }
     }
 
@@ -31,19 +32,27 @@ var RelayListActions = class {
         }
     }
 
-    switchRelay(number) {
+    switchRelay(relayboard_id,number) {
         var self = this;
         return (dispatch) => {
-            Store.switchRelay(number, function (status) {
-                dispatch(self.updateStatus(status));
+            Store.switchRelay(relayboard_id,number, function (status) {
+
             });
         }
     }
 
-    updateStatus(status) {
+    updateStatus(relayboards,currentRelayBoard) {
         return {
             type: this.types.UPDATE_STATUS,
-            status: status
+            relayboards: relayboards,
+            currentRelayBoard: currentRelayBoard
+        }
+    }
+
+    updateCurrentRelayBoard(id) {
+        return {
+            type: this.types.UPDATE_CURRENT_RELAYBOARD,
+            currentRelayBoard: id
         }
     }
 };

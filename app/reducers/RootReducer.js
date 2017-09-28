@@ -10,8 +10,8 @@ var RootReducer = (state,action) => {
     if (typeof(state) == 'undefined') {
         state = {
             RelayList: {
-                relays: [],
-                status: []
+                relayboards: [],
+                currentRelayBoard: null
             },
             AppSettings: {},
             RelaySettings: {},

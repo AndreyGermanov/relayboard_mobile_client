@@ -6,6 +6,8 @@ import RelaySettings from '../containers/RelaySettingsContainer';
 import AppActions from '../actions/AppActions';
 import RelayListActions from '../actions/RelayListActions';
 import Store from '../store/Store';
+import getTheme from '../../native-base-theme/components';
+import {StyleProvider} from 'native-base';
 
 const RelayBoard = class extends Component {
     render() {
@@ -22,19 +24,19 @@ const RelayBoard = class extends Component {
                 { cancelable: false }
             )
         }
+        var rootComponent = <RelayList store={this.props.store}/>;
+
         if (state.mode == 'app_settings') {
-            return (
-                <AppSettings store={this.props.store} />
-            )
+            rootComponent = <AppSettings store={this.props.store} />
         } else if (state.mode == 'relay_settings') {
-            return (
-                <RelaySettings store={this.props.store} />
-            )
-        } else {
-            return (
-                <RelayList store={this.props.store}/>
-            )
-        }
+            rootComponent = <RelaySettings store={this.props.store} />;
+        };
+
+        return (
+            <StyleProvider  style={getTheme()}>
+                {rootComponent}
+            </StyleProvider>
+        )
     }
 
     componentDidMount() {
@@ -44,14 +46,11 @@ const RelayBoard = class extends Component {
         }
         var self = this;
         this.interval = setInterval(function () {
-            Store.getRelayStatus(function (status,relays_changed) {
-                if (status) {
-                    self.props.store.dispatch(RelayListActions.updateStatus(status));
+            Store.getRelayStatus(function (relayboards,currentRelayBoard) {
+                if (relayboards) {
+                    self.props.store.dispatch(RelayListActions.updateStatus(relayboards,currentRelayBoard));
                 } else {
                     self.props.store.dispatch(RelayListActions.updateStatus([]));
-                }
-                if (relays_changed===true) {
-                    self.props.store.dispatch(AppActions.loadState());
                 }
             })
         }, 1000);

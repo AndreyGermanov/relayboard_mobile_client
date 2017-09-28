@@ -1,9 +1,7 @@
 import React,{Component} from 'react';
-import {View,Text,ScrollView} from 'react-native'
-import {FormLabel,FormInput,FormValidationMessage,ButtonGroup} from 'react-native-elements';
-import styles from '../utils/StyleSheet';
-import SaveSettingsFooter from './SaveSettingsFooter';
-import Header from './Header';
+import {Text} from 'react-native'
+import {FormValidationMessage} from 'react-native-elements';
+import {Container,Header,Left,Body,Right,Content,Form,Item,Label,Input,Picker,Footer,FooterTab,Button,Icon,Title} from 'native-base';
 
 var AppSettings = class extends Component {
     render() {
@@ -12,60 +10,82 @@ var AppSettings = class extends Component {
             loginError = null;
         if (this.props.errors.host) {
             hostError = <FormValidationMessage>
-                {this.props.errors.host};
+                {this.props.errors.host}
             </FormValidationMessage>
         }
         if (this.props.errors.port) {
             portError = <FormValidationMessage>
-                {this.props.errors.port};
+                {this.props.errors.port}
             </FormValidationMessage>
         }
         if (this.props.errors.login) {
             loginError = <FormValidationMessage>
-                {this.props.errors.login};
+                {this.props.errors.login}
             </FormValidationMessage>
         }
-        var selectedIndex = 0,
-            loginField = null,
-            passwordField = null;
-        if (this.props.mode == 'portal') {
-            selectedIndex = 1;
-            loginField = [
-                <FormLabel key="login_label">Login</FormLabel>,
-                <FormInput key="login_input" value={this.props.login} onChangeText={this.props.onChangeLoginField.bind(this)}/>,
-            ];
-            passwordField = [
-                <FormLabel key="password_label">Password</FormLabel>,
-                <FormInput key="password_input" value={this.props.password} onChangeText={this.props.onChangePasswordField.bind(this)}/>,
-            ]
-        }
-        return (
-            <View style={styles.layout}>
-                <Header onSettingsClick={this.props.onSettingsClick.bind(this)}/>
-                <ScrollView>
-                    <FormLabel>Server host</FormLabel>
-                    {hostError}
-                    <FormInput value={this.props.host} onChangeText={this.props.onChangeHostField.bind(this)}/>
-                    <FormLabel>Server port</FormLabel>
-                    {portError}
-                    <FormInput value={this.props.port.toString()}  onChangeText={this.props.onChangePortField.bind(this)}/>
-                    <FormLabel>Server type</FormLabel>
-                    <ButtonGroup onPress={this.props.onChangeModeField.bind(this)}
-                                 buttons={['Local','Portal']}
-                                 selectedIndex={selectedIndex}
-                                 selectedBackgroundColor="darkgreen"
-                                 selectedTextStyle={{color:'white'}}
 
-                    />
+        var loginField = null,
+            passwordField = null;
+
+        if (this.props.mode == 'portal') {
+            loginField =
+                <Item>
+                    <Label>Login</Label>
+                    <Input value={this.props.login} onChangeText={this.props.onChangeLoginField.bind(this)}/>
+                </Item>;
+            passwordField =
+                <Item>
+                    <Label>Password</Label>
+                    <Input value={this.props.password} onChangeText={this.props.onChangePasswordField.bind(this)}/>
+                </Item>;
+        }
+
+        return (
+        <Container>
+            <Header>
+                <Left>
+                    <Button transparent onPress={this.props.onSettingsClick.bind(this)}>
+                        <Icon name="menu"/>
+                    </Button>
+                </Left>
+                <Body>
+                <Title>Settings</Title>
+                </Body>
+            </Header>
+            <Content>
+                <Form>
+                    <Item stackedLabel>
+                        <Label>Server host</Label>
+                        <Input value={this.props.host} onChangeText={this.props.onChangeHostField.bind(this)}/>
+                    </Item>
+                    {hostError}
+                    <Item stackedLabel>
+                        <Label>Server port</Label>
+                        <Input value={this.props.port.toString()} onChangeText={this.props.onChangePortField.bind(this)}/>
+                    </Item>
+                    {portError}
+                    <Picker mode="dropdown"
+                            placeholder='Server Type'
+                            selectedValue={this.props.mode}
+                            onValueChange={this.props.onChangeModeField.bind(this)}>
+                        <Item label='Local' value="local"/>
+                        <Item label="Portal" value="portal"/>
+                    </Picker>
                     {loginField}
-                    {loginError}
                     {passwordField}
-                </ScrollView>
-                <SaveSettingsFooter
-                    onSaveClick={this.props.onSaveSettingsClick.bind(this)}
-                    onCancelClick={this.props.onCancelSettingsClick.bind(this)}
-                />
-            </View>
+                </Form>
+            </Content>
+            <Footer>
+                <FooterTab>
+                    <Button full onPress={this.props.onSaveSettingsClick.bind(this)}>
+                        <Text>Save</Text>
+                    </Button>
+                    <Button full onPress={this.props.onCancelSettingsClick.bind(this)}>
+                        <Text>Cancel</Text>
+                    </Button>
+                </FooterTab>
+            </Footer>
+        </Container>
         )
     }
 };

@@ -1,66 +1,87 @@
 import React,{Component} from 'react';
 import {View,ScrollView,TouchableHighlight} from 'react-native';
-import {Header,Footer,Content,Container,Title,FooterTab,Button,Left,Right,Body,Icon,Text} from 'native-base';
+import {Header,Footer,Content,Container,Title,FooterTab,Button,Left,Right,Body,Icon,Text,Picker,Item,Form,Grid,Row} from 'native-base';
 import styles from '../utils/StyleSheet';
+import actions from '../actions/RelayListActions';
+import Store from '../store/Store';
 
 const RelayList = class extends Component {
     render() {
         var buttonStyle = styles.button,
             buttonTextStyle = styles.buttonText;
-        var buttons = this.props.relays.map(function(relay,index) {
-            if (typeof(this.props.status[relay.id-1]) != 'undefined') {
-                if (this.props.status[relay.id - 1] == 1) {
-                    buttonStyle = [styles.button, styles.buttonActive];
-                    buttonTextStyle = styles.buttonActiveText;
-                } else if (this.props.status[relay.id - 1] == 0) {
-                    buttonStyle = styles.button;
-                    buttonTextStyle = styles.buttonText;
+
+        var relayboards_list = [],
+            buttons = [];
+        if (this.props.relayboards) {
+            for (var index in this.props.relayboards) {
+                if (!this.props.currentRelayBoard) {
+                    Store.store.dispatch(actions.updateCurrentRelayBoard(index));
                 }
-            } else {
-                buttonStyle = [styles.button,styles.buttonInactive];
-                buttonTextStyle = styles.buttonInactiveText;
+                relayboards_list.push(<Item key={'relayboard_'+index} label={index} value={index}/>)
             }
-            return (
-                <View style={styles.buttonContainer} key={'relay_view_'+index}>
-                    <View style={buttonStyle} key={'relay_button_'+index}>
-                        <TouchableHighlight onPress={this.props.onSwitchRelay.bind(this,relay.id)}>
-                            <Icon name="power-off" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
-                        </TouchableHighlight>
-                        <View style={{flex:1,flexDirection:'row',justifyContent:'center'}}>
-                            <Text style={[buttonTextStyle,{flex:1}]}
-                                  key={'relay_text_'+relay.id}>{relay.name}</Text>
-                        </View>
-                        <TouchableHighlight onPress={this.props.onEditRelay.bind(this,index,relay.id,relay.name)}>
-                            <Icon name="cog" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
-                        </TouchableHighlight>
-                        <TouchableHighlight onPress={this.props.onDeleteRelay.bind(this,relay.id,1)}>
-                            <Icon name="ban" style={[buttonTextStyle,{width:40,fontSize:24}]}/>
-                        </TouchableHighlight>
-                    </View>
-                </View>
-            )
-        },this);
-        /*var footer = <Footer onNewRelay={this.props.onNewRelay}/>;
-        var state = this.props.store.getState();
-        if (state.RelayList.relays.length>11) {
-            footer = null;
-        };
-        */
+            if (relayboards_list && relayboards_list.length && this.props.currentRelayBoard) {
+                buttons = this.props.relayboards[this.props.currentRelayBoard].config.pins.map(function (pin, index) {
+                    if (typeof(this.props.relayboards[this.props.currentRelayBoard].status[index]) != 'undefined') {
+                        var status = this.props.relayboards[this.props.currentRelayBoard].status[index];
+                        if (status == 1) {
+                            buttonStyle = [styles.button, styles.buttonActive];
+                            buttonTextStyle = styles.buttonActiveText;
+                        } else if (status == 0) {
+                            buttonStyle = styles.button;
+                            buttonTextStyle = styles.buttonText;
+                        }
+                    } else {
+                        buttonStyle = [styles.button, styles.buttonInactive];
+                        buttonTextStyle = styles.buttonInactiveText;
+                    }
+                    if (pin.type == 'relay') {
+                        if (status == 1) {
+                            return (
+                                <Button style={{marginBottom:10}} key={'relay_'+index} success block
+                                        onPress={this.props.onSwitchRelay.bind(this,this.props.currentRelayBoard,index)}>
+                                    <Icon name="md-power"/>
+                                    <Text>{pin.title}</Text>
+                                </Button>
+                            )
+                        } else if (status == 0) {
+                            return (
+                                <Button style={{marginBottom:10}} key={'relay_'+index} danger block
+                                        onPress={this.props.onSwitchRelay.bind(this,this.props.currentRelayBoard,index)}>
+                                    <Icon name="md-power"/>
+                                    <Text>{pin.title}</Text>
+                                </Button>
+                            )
+                        }
+                    }
+                }, this);
+            }
+        }
         return (
             <Container>
                 <Header>
                     <Left>
-                        <Button transparent>
+                        <Button transparent onPress={this.props.onSettingsClick.bind(this)}>
                             <Icon name="menu"/>
                         </Button>
                     </Left>
                     <Body>
-                        <Title>Relay Board</Title>
+                        <Title>Control Center</Title>
                     </Body>
-                    <Right/>
+                    <Right>
+                        <Button transparent onPress={this.props.onRefreshClick.bind(this)}>
+                            <Icon name="refresh"/>
+                        </Button>
+                    </Right>
                 </Header>
-                <Content>
-                    <Text>Relays and Sensors</Text>
+                <Content >
+                    <Picker placeholder='Select Relay Board'
+                            selectedValue={this.props.currentRelayBoard}
+                            onValueChange={this.props.onChangeCurrentRelayboard.bind(this)}>
+                        {relayboards_list}
+                    </Picker>
+                    <ScrollView style={{marginLeft:20,marginRight:20}}>
+                    {buttons}
+                    </ScrollView>
                 </Content>
                 <Footer>
                     <FooterTab>

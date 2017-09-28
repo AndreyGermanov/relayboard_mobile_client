@@ -60,12 +60,7 @@ const mapDispatchToProps = (dispatch,ownProps) => {
         onChangeHostField: (value) => {
             dispatch(AppSettingsActions.changeHostField(value))
         },
-        onChangeModeField: (index) => {
-            if (index==0) {
-                value = 'local';
-            } else if (index==1) {
-                value = 'portal';
-            };
+        onChangeModeField: (value) => {
             dispatch(AppSettingsActions.changeModeField(value))
         },
         onChangeLoginField: (value) => {
