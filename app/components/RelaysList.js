@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {View,ScrollView,TouchableHighlight} from 'react-native';
-import {Header,Footer,Content,Container,Title,FooterTab,Button,Left,Right,Body,Icon,Text,Picker,Item,Form,Grid,Row} from 'native-base';
+import {Header,Footer,Content,Container,Title,FooterTab,Button,Left,Right,Body,Icon,Text,Picker,Item,Card,CardItem,Grid,Col} from 'native-base';
 import styles from '../utils/StyleSheet';
 import actions from '../actions/RelayListActions';
 import Store from '../store/Store';
@@ -21,20 +21,20 @@ const RelayList = class extends Component {
             }
             if (relayboards_list && relayboards_list.length && this.props.currentRelayBoard) {
                 buttons = this.props.relayboards[this.props.currentRelayBoard].config.pins.map(function (pin, index) {
-                    if (typeof(this.props.relayboards[this.props.currentRelayBoard].status[index]) != 'undefined') {
-                        var status = this.props.relayboards[this.props.currentRelayBoard].status[index];
-                        if (status == 1) {
-                            buttonStyle = [styles.button, styles.buttonActive];
-                            buttonTextStyle = styles.buttonActiveText;
-                        } else if (status == 0) {
-                            buttonStyle = styles.button;
-                            buttonTextStyle = styles.buttonText;
-                        }
-                    } else {
-                        buttonStyle = [styles.button, styles.buttonInactive];
-                        buttonTextStyle = styles.buttonInactiveText;
-                    }
                     if (pin.type == 'relay') {
+                        if (typeof(this.props.relayboards[this.props.currentRelayBoard].status[index]) != 'undefined') {
+                            var status = this.props.relayboards[this.props.currentRelayBoard].status[index];
+                            if (status == 1) {
+                                buttonStyle = [styles.button, styles.buttonActive];
+                                buttonTextStyle = styles.buttonActiveText;
+                            } else if (status == 0) {
+                                buttonStyle = styles.button;
+                                buttonTextStyle = styles.buttonText;
+                            }
+                        } else {
+                            buttonStyle = [styles.button, styles.buttonInactive];
+                            buttonTextStyle = styles.buttonInactiveText;
+                        }
                         if (status == 1) {
                             return (
                                 <Button style={{marginBottom:10}} key={'relay_'+index} success block
@@ -52,6 +52,29 @@ const RelayList = class extends Component {
                                 </Button>
                             )
                         }
+                    } else if (pin.type == 'temperature') {
+                        var status = this.props.relayboards[this.props.currentRelayBoard].status[index];
+                        status = status.split('|');
+                        var temperature = parseFloat(status.shift()).toFixed(2),
+                            humidity = parseFloat(status.pop()).toFixed(2);
+                        return (
+                            <Card key={'temperature_'+index}>
+                                <CardItem>
+                                    <Body>
+                                    <Grid>
+                                        <Col>
+                                            <Icon name="ios-sunny-outline" style={{color:'#FF8C00'}}/>
+                                            <Text style={{color:'#FF8C00'}}>{temperature} C</Text>
+                                        </Col>
+                                        <Col>
+                                            <Icon name="ios-water" style={{color:'blue'}}/>
+                                            <Text style={{color:'blue'}}>{humidity} %</Text>
+                                        </Col>
+                                    </Grid>
+                                    </Body>
+                                </CardItem>
+                            </Card>
+                        )
                     }
                 }, this);
             }
