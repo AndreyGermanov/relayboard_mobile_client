@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {Text} from 'react-native'
+import styles from '../utils/StyleSheet';
 import {FormValidationMessage} from 'react-native-elements';
 import {Container,Header,Left,Body,Right,Content,Form,Item,Label,Input,Picker,Footer,FooterTab,Button,Icon,Title} from 'native-base';
 
@@ -42,7 +43,7 @@ var AppSettings = class extends Component {
 
         return (
         <Container>
-            <Header>
+            <Header  style={styles.header}>
                 <Left>
                     <Button transparent onPress={this.props.onSettingsClick.bind(this)}>
                         <Icon name="menu"/>
@@ -77,11 +78,13 @@ var AppSettings = class extends Component {
             </Content>
             <Footer>
                 <FooterTab>
-                    <Button full onPress={this.props.onSaveSettingsClick.bind(this)}>
-                        <Text>Save</Text>
+                    <Button style={styles.button} inonLeft full onPress={this.props.onSaveSettingsClick.bind(this)}>
+                        <Icon name="ios-checkmark" style={styles.text}/>
+                        <Text style={styles.text}>Save</Text>
                     </Button>
-                    <Button full onPress={this.props.onCancelSettingsClick.bind(this)}>
-                        <Text>Cancel</Text>
+                    <Button style={[styles.button,{backgroundColor:'red'}]} full onPress={this.props.onCancelSettingsClick.bind(this)}>
+                        <Icon name="md-close" style={styles.text}/>
+                        <Text style={styles.text}>Cancel</Text>
                     </Button>
                 </FooterTab>
             </Footer>

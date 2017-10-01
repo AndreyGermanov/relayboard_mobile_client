@@ -17,7 +17,7 @@ const RelayList = class extends Component {
                 if (!this.props.currentRelayBoard) {
                     Store.store.dispatch(actions.updateCurrentRelayBoard(index));
                 }
-                relayboards_list.push(<Item key={'relayboard_'+index} label={index} value={index}/>)
+                relayboards_list.push(<Item key={'relayboard_'+index} label={this.props.relayboards[index].config.title} value={index}/>)
             }
             if (relayboards_list && relayboards_list.length && this.props.currentRelayBoard) {
                 buttons = this.props.relayboards[this.props.currentRelayBoard].config.pins.map(function (pin, index) {
@@ -39,16 +39,28 @@ const RelayList = class extends Component {
                             return (
                                 <Button style={{marginBottom:10}} key={'relay_'+index} success block
                                         onPress={this.props.onSwitchRelay.bind(this,this.props.currentRelayBoard,index)}>
-                                    <Icon name="md-power"/>
-                                    <Text>{pin.title}</Text>
+                                    <Grid>
+                                        <Col style={{width:55}}>
+                                            <Icon name="md-power"/>
+                                        </Col>
+                                        <Col>
+                                            <Text>{pin.title}</Text>
+                                        </Col>
+                                    </Grid>
                                 </Button>
                             )
                         } else if (status == 0) {
                             return (
                                 <Button style={{marginBottom:10}} key={'relay_'+index} danger block
                                         onPress={this.props.onSwitchRelay.bind(this,this.props.currentRelayBoard,index)}>
-                                    <Icon name="md-power"/>
-                                    <Text>{pin.title}</Text>
+                                    <Grid>
+                                        <Col style={{width:55}}>
+                                            <Icon name="md-power"/>
+                                        </Col>
+                                        <Col>
+                                            <Text>{pin.title}</Text>
+                                        </Col>
+                                    </Grid>
                                 </Button>
                             )
                         }
@@ -58,7 +70,7 @@ const RelayList = class extends Component {
                         var temperature = parseFloat(status.shift()).toFixed(2),
                             humidity = parseFloat(status.pop()).toFixed(2);
                         return (
-                            <Card key={'temperature_'+index}>
+                            <Card style={{marginBottom:15}} key={'temperature_'+index}>
                                 <CardItem>
                                     <Body>
                                     <Grid>
@@ -81,14 +93,14 @@ const RelayList = class extends Component {
         }
         return (
             <Container>
-                <Header>
+                <Header style={styles.header}>
                     <Left>
                         <Button transparent onPress={this.props.onSettingsClick.bind(this)}>
                             <Icon name="menu"/>
                         </Button>
                     </Left>
                     <Body>
-                        <Title>Control Center</Title>
+                        <Title>Home</Title>
                     </Body>
                     <Right>
                         <Button transparent onPress={this.props.onRefreshClick.bind(this)}>
@@ -96,20 +108,21 @@ const RelayList = class extends Component {
                         </Button>
                     </Right>
                 </Header>
-                <Content >
+                <Content>
                     <Picker placeholder='Select Relay Board'
                             selectedValue={this.props.currentRelayBoard}
                             onValueChange={this.props.onChangeCurrentRelayboard.bind(this)}>
                         {relayboards_list}
                     </Picker>
-                    <ScrollView style={{marginLeft:20,marginRight:20}}>
+                    <ScrollView style={styles.relaylist}>
                     {buttons}
                     </ScrollView>
                 </Content>
                 <Footer>
                     <FooterTab>
-                        <Button full>
-                            <Text>Add Relay</Text>
+                        <Button iconLeft style={styles.button}>
+                            <Icon name="md-add" style={styles.text}/>
+                            <Text style={styles.text}>Add Relay</Text>
                         </Button>
                     </FooterTab>
                 </Footer>

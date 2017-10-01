@@ -3,75 +3,20 @@ import {StyleSheet} from 'react-native';
 
 // Core UI Styles
 const styles = StyleSheet.create({
-    layout: {
-        flex:1,
-        flexDirection:'column'
-    },
-    body: {
-        flex:1,
-        backgroundColor: 'white'
-    },
-    header: {
-        padding:10,
-        backgroundColor: 'darkgreen',
-        flex:1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    footer: {
-        padding:10,
-        backgroundColor: 'darkgreen',
-        flex:1,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center'
-    },
-    headerText: {
-        color: 'white',
-        fontSize: 24
-    },
-    buttonContainer: {
-        padding:10
-    },
-    relayList: {
-        padding:20,
-        flex:1,
-        flexDirection:'column',
-        justifyContent:'space-between'
+    relaylist: {
+        marginLeft:20,
+        marginRight:20
     },
     button: {
-        height: 50,
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        borderWidth: 3,
-        borderColor: '#ff6347',
-        borderRadius: 7,
-        padding: 5,
-        backgroundColor: '#ff6347',
-        opacity: 0.5
+        backgroundColor:'darkgreen',
     },
-    buttonActive: {
-        borderColor: '#7fff00',
-        backgroundColor: '#98fb98',
-        opacity: 0.5
+    text: {
+        color:'white'
     },
-    buttonActiveText: {
-        color: 'green'
-    },
-    buttonText: {
-        color: 'red'
-    },
-    buttonInactive: {
-        borderColor: '#666666',
-        backgroundColor: '#ffffff',
-        opacity: 1
-    },
-    buttonInactiveText: {
-        color: '#666666'
-    },
+    header: {
+        backgroundColor: 'darkgreen'
+    }
+
 });
 
 export default styles;
