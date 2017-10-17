@@ -22,19 +22,7 @@ const RelayList = class extends Component {
             if (relayboards_list && relayboards_list.length && this.props.currentRelayBoard) {
                 buttons = this.props.relayboards[this.props.currentRelayBoard].config.pins.map(function (pin, index) {
                     if (pin.type == 'relay') {
-                        if (typeof(this.props.relayboards[this.props.currentRelayBoard].status[index]) != 'undefined') {
-                            var status = this.props.relayboards[this.props.currentRelayBoard].status[index];
-                            if (status == 1) {
-                                buttonStyle = [styles.button, styles.buttonActive];
-                                buttonTextStyle = styles.buttonActiveText;
-                            } else if (status == 0) {
-                                buttonStyle = styles.button;
-                                buttonTextStyle = styles.buttonText;
-                            }
-                        } else {
-                            buttonStyle = [styles.button, styles.buttonInactive];
-                            buttonTextStyle = styles.buttonInactiveText;
-                        }
+                        var status = this.props.relayboards[this.props.currentRelayBoard].status[pin.number];
                         if (status == 1) {
                             return (
                                 <Button style={{marginBottom:10}} key={'relay_'+index} success block
@@ -63,24 +51,46 @@ const RelayList = class extends Component {
                                     </Grid>
                                 </Button>
                             )
+                        } else {
+                            return (
+                                <Button style={{marginBottom:10}} key={'relay_'+index} light block>
+                                    <Grid>
+                                        <Col style={{width:55}}>
+                                            <Icon name="md-power"/>
+                                        </Col>
+                                        <Col>
+                                            <Text>{pin.title}</Text>
+                                        </Col>
+                                    </Grid>
+                                </Button>
+                            )
                         }
                     } else if (pin.type == 'temperature') {
-                        var status = this.props.relayboards[this.props.currentRelayBoard].status[index];
-                        status = status.split('|');
-                        var temperature = parseFloat(status.shift()).toFixed(2),
-                            humidity = parseFloat(status.pop()).toFixed(2);
+                        var status = this.props.relayboards[this.props.currentRelayBoard].status[pin.number];
+                        if (status) {
+                            status = status.split('|');
+                            var temperature = parseFloat(status.shift()).toFixed(2),
+                                humidity = parseFloat(status.pop()).toFixed(2);
+                            var temperature_color = '#FF8C00',
+                                humidity_color = 'blue';
+                        } else {
+                            var temperature = 0,
+                                humidity = 0;
+                            var temperature_color = 'gray',
+                                humidity_color = 'gray';
+                        }
                         return (
                             <Card style={{marginBottom:15}} key={'temperature_'+index}>
                                 <CardItem>
                                     <Body>
                                     <Grid>
                                         <Col>
-                                            <Icon name="ios-sunny-outline" style={{color:'#FF8C00'}}/>
-                                            <Text style={{color:'#FF8C00'}}>{temperature} C</Text>
+                                            <Icon name="ios-sunny-outline" style={{color:temperature_color}}/>
+                                            <Text style={{color:temperature_color}}>{temperature} C</Text>
                                         </Col>
                                         <Col>
-                                            <Icon name="ios-water" style={{color:'blue'}}/>
-                                            <Text style={{color:'blue'}}>{humidity} %</Text>
+                                            <Icon name="ios-water" style={{color:humidity_color}}/>
+                                            <Text style={{color:humidity_color}}>{humidity} %</Text>
                                         </Col>
                                     </Grid>
                                     </Body>

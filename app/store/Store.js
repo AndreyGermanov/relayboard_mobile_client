@@ -212,11 +212,11 @@ const Store = class {
     };
     
     switchRelay(relayboard_id,index,callback) {
+        var number = this.relayboards[relayboard_id].config.pins[index].number;
         var mode = 'ON';
-        if (this.relayboards[relayboard_id].status[index]==1) {
+        if (this.relayboards[relayboard_id].status[number]==1) {
             mode = 'OFF';
         };
-        var number = this.relayboards[relayboard_id].config.pins[index].number;
         var self = this;
         if (this.settings.app.mode == 'local') {
             fetch(this.http_protocol+this.settings.app.host + ':' + this.settings.app.port + '/request/' + mode + '/' + number).then(function (response) {
